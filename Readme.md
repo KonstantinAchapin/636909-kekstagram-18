@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Константин Ачапин](https://up.htmlacademy.ru/javascript/18/user/636909).
-* Наставник: `Неизвестно`.
+* Наставник: [Иван Чернобук](https://htmlacademy.ru/profile/id237614).
 
 ---
 
