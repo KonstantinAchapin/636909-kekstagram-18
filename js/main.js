@@ -9,8 +9,33 @@ var MAX_RANDOM_VALUE = 5;
 var MIN_RANDOM_COMMENTS = 10;
 var MAX_RANDOM_COMMENTS = 25;
 
+var MIN_BIG_PHOTO_NUMBER = 0;
+var MAX_BIG_PHOTO_NUMBER = 2;
+
 var arrayObjectsPictures = []; // пустой массив объектов;
 var picturesContainer = document.querySelector('.pictures'); // контейнер куда мы вставляем фотографии
+
+// ЗАДАНИЕ 2
+// Получаем элементы разметки с помощью querySelector
+var pictureContain = document.querySelector('.big-picture');
+var popapCommentCount = document.querySelector('.social__comment-count');
+var popapCommentsLoader = document.querySelector('.comments-loader');
+var popapPictureImg = document.querySelector('.big-picture__img').querySelector('img');
+var popapDescription = document.querySelector('.social__caption');
+var popapLikesCount = document.querySelector('.likes-count');
+var popapCommentsCount = document.querySelector('.comments-count');
+var bigPictureComment = document.querySelectorAll('.social__comment');
+var popapImgAvatar = document.querySelectorAll('.social__comment');
+var popapSocialText = document.querySelectorAll('.social__comment');
+
+// Показываем попап с большой фотографией и ее описанием
+pictureContain.classList.remove('hidden');
+
+// Скрываем элементы с помощью добавления класса hidden элементам
+popapCommentCount.classList.add('hidden');
+popapCommentsLoader.classList.add('hidden');
+
+// ЗАДАНИЕ 2
 
 var getRandomNumber = function (min, max) { // функция возвращающая случайное число от min до max;
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -56,3 +81,32 @@ for (var i = 0; i <= 24; i++) { // цикл который создает 25 о�
   var element = template.cloneNode(true);
   picturesContainer.appendChild(element);
 }
+
+// ЗАДАНИЕ 2
+
+var popupDataFilling = function (arrayIndex) { // функция которая подставляет данные в попап
+  popapPictureImg.src = 'img/logo-background-' + arrayObjectsPictures[arrayIndex].url + '.jpg';
+  popapDescription.textContent = arrayObjectsPictures[arrayIndex].description;
+
+  popapLikesCount.textContent = arrayObjectsPictures[arrayIndex].likes;
+
+  popapCommentsCount.textContent = arrayObjectsPictures[arrayIndex].comments.length;
+
+  for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
+    popapImgAvatar[i].querySelector('.social__picture');
+    popapImgAvatar[i].querySelector('.social__picture');
+    popapSocialText[i].querySelector('.social__text');
+  }
+
+  var createComment = function (numberComment) { // функция которая подставляет данные в комментарии
+    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
+    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
+    popapSocialText[numberComment].querySelector('.social__text').textContent = arrayObjectsPictures[numberComment].comments[numberComment].message;
+  };
+  createComment(0); // берем значения первого элемента массива
+  createComment(1); // берем значения второго элемента массива
+};
+
+popupDataFilling(getRandomNumber(MIN_BIG_PHOTO_NUMBER, MAX_BIG_PHOTO_NUMBER));
+
+// ЗАДАНИЕ 2
