@@ -12,30 +12,100 @@ var MAX_RANDOM_COMMENTS = 25;
 var MIN_BIG_PHOTO_NUMBER = 0;
 var MAX_BIG_PHOTO_NUMBER = 2;
 
+var ESC_KEYCODE = 27;
+var INITIAL_VALUE_IMG = 100;
+var STEP_OF_CHANGE_VALUE_IMG = 25;
+var MIN_VALUE_NUMBER_IMG = 25;
+var MAX_VALUE_NUMBER_IMG = 100;
+
+var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
+var STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG = 0.25;
+
+
 var arrayObjectsPictures = []; // пустой массив объектов;
 var picturesContainer = document.querySelector('.pictures'); // контейнер куда мы вставляем фотографии
 
 // ЗАДАНИЕ 2
 // Получаем элементы разметки с помощью querySelector
 var pictureContain = document.querySelector('.big-picture');
-var popapCommentCount = document.querySelector('.social__comment-count');
-var popapCommentsLoader = document.querySelector('.comments-loader');
-var popapPictureImg = document.querySelector('.big-picture__img').querySelector('img');
-var popapDescription = document.querySelector('.social__caption');
-var popapLikesCount = document.querySelector('.likes-count');
-var popapCommentsCount = document.querySelector('.comments-count');
-var bigPictureComment = document.querySelectorAll('.social__comment');
-var popapImgAvatar = document.querySelectorAll('.social__comment');
-var popapSocialText = document.querySelectorAll('.social__comment');
+var popapCommentCount = pictureContain.querySelector('.social__comment-count');
+var popapCommentsLoader = pictureContain.querySelector('.comments-loader');
+var popapPictureImg = pictureContain.querySelector('.big-picture__img').querySelector('img');
+var popapDescription = pictureContain.querySelector('.social__caption');
+var popapLikesCount = pictureContain.querySelector('.likes-count');
+var popapCommentsCount = pictureContain.querySelector('.comments-count');
+var bigPictureComment = pictureContain.querySelectorAll('.social__comment');
+var popapImgAvatar = pictureContain.querySelectorAll('.social__comment');
+var popapSocialText = pictureContain.querySelectorAll('.social__comment');
 
 // Показываем попап с большой фотографией и ее описанием
-pictureContain.classList.remove('hidden');
+// pictureContain.classList.remove('hidden');
 
 // Скрываем элементы с помощью добавления класса hidden элементам
 popapCommentCount.classList.add('hidden');
 popapCommentsLoader.classList.add('hidden');
 
 // ЗАДАНИЕ 2
+// ЗАДАНИЕ 3
+var imgUploadSection = document.querySelector('.img-upload');
+var imgUploadForm = imgUploadSection.querySelector('#upload-select-image');
+var imgEditingForm = imgUploadSection.querySelector('.img-upload__overlay');
+var imgUserDownloader = imgUploadSection.querySelector('#upload-file');
+var imgButtonClose = imgUploadSection.querySelector('#upload-cancel');
+
+var scaleControlSmaller = imgUploadSection.querySelector('.scale__control--smaller');
+var scaleControlBigger = imgUploadSection.querySelector('.scale__control--bigger');
+var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
+var scaleControlValueNumber = INITIAL_VALUE_IMG;
+scaleControlValue.value = scaleControlValueNumber + '%';
+
+var imgUploadPreview = imgUploadSection.querySelector('.img-upload__preview');
+var numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
+imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
+
+imgUserDownloader.addEventListener('change', function () {
+  openImageEditing();
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeImageEditing();
+    }
+  });
+});
+
+var openImageEditing = function () {
+  imgEditingForm.classList.remove('hidden');
+};
+
+imgButtonClose.addEventListener('click', function () {
+  closeImageEditing();
+});
+
+var closeImageEditing = function () {
+  imgEditingForm.classList.add('hidden');
+  imgUploadForm.reset(); // НЕ РАБОТАЕТ RESET НА ФОРМЕ, ПОЧЕМУ???
+};
+
+scaleControlSmaller.addEventListener('click', function () {
+  if (scaleControlValueNumber > MIN_VALUE_NUMBER_IMG) {
+    scaleControlValueNumber -= STEP_OF_CHANGE_VALUE_IMG;
+    scaleControlValue.value = scaleControlValueNumber + '%';
+
+    numberForSize -= STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG;
+    imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
+  }
+});
+
+scaleControlBigger.addEventListener('click', function () {
+  if (scaleControlValueNumber < MAX_VALUE_NUMBER_IMG) {
+    scaleControlValueNumber += STEP_OF_CHANGE_VALUE_IMG;
+    scaleControlValue.value = scaleControlValueNumber + '%';
+
+    numberForSize += STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG;
+    imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
+  }
+});
+
+// ЗАДАНИЕ 3 //
 
 var getRandomNumber = function (min, max) { // функция возвращающая случайное число от min до max;
   return Math.floor(Math.random() * (max - min + 1)) + min;
