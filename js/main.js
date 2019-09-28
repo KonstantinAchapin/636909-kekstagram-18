@@ -47,6 +47,8 @@ popapCommentsLoader.classList.add('hidden');
 
 // ЗАДАНИЕ 2
 // ЗАДАНИЕ 3
+
+// Определяем рабочие элементы с помощью querySelector
 var imgUploadSection = document.querySelector('.img-upload');
 var imgUploadForm = imgUploadSection.querySelector('#upload-select-image');
 var imgEditingForm = imgUploadSection.querySelector('.img-upload__overlay');
@@ -56,15 +58,34 @@ var imgButtonClose = imgUploadSection.querySelector('#upload-cancel');
 var scaleControlSmaller = imgUploadSection.querySelector('.scale__control--smaller');
 var scaleControlBigger = imgUploadSection.querySelector('.scale__control--bigger');
 var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
+var imgEffectLevel = imgUploadSection.querySelector('.scale__control--bigger');
+
+var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
+var imgEffectChangeButton = imgUploadSection.querySelector('.effect-level__pin');
+var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
+
+// Задаем начальное значение value размера изображения в 100%
 var scaleControlValueNumber = INITIAL_VALUE_IMG;
 scaleControlValue.value = scaleControlValueNumber + '%';
 
+// Определяем переменную которая хранит размер размер изображения
 var imgUploadPreview = imgUploadSection.querySelector('.img-upload__preview');
 var numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
-imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
 
+// Определяем переменную которая хранит позицию пина на линейке изменения эффекта
+var positionEffectPin = 0;
+
+// Событие загрузки фотографии
 imgUserDownloader.addEventListener('change', function () {
   openImageEditing();
+
+  // Находим позицию пина на линейке изменения и делаем пропорцию в %
+  var posX = imgEffectChangeButton.offsetLeft;
+  var posWidth = imgEffectLevelLine.offsetWidth;
+  positionEffectPin = Math.round((posX / posWidth) * 100);
+  imgEffectLevel.value = positionEffectPin;
+
+  // Добавляем событие закрытие по кнопке ESC
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeImageEditing();
@@ -72,19 +93,23 @@ imgUserDownloader.addEventListener('change', function () {
   });
 });
 
+// Функция открытия попапа
 var openImageEditing = function () {
   imgEditingForm.classList.remove('hidden');
 };
 
+// Событие закрытия попап
 imgButtonClose.addEventListener('click', function () {
   closeImageEditing();
 });
 
+// Функция закрытия попапа
 var closeImageEditing = function () {
   imgEditingForm.classList.add('hidden');
-  imgUploadForm.reset(); // НЕ РАБОТАЕТ RESET НА ФОРМЕ, ПОЧЕМУ???
+  imgUploadForm.reset(); // НЕ РАБОТАЕТ RESET НА ФОРМЕ, НЕ ПОЙМУ ПОЧЕМУ???!!!
 };
 
+// Событие клика которое уменьшает размер изображения и меняет value %
 scaleControlSmaller.addEventListener('click', function () {
   if (scaleControlValueNumber > MIN_VALUE_NUMBER_IMG) {
     scaleControlValueNumber -= STEP_OF_CHANGE_VALUE_IMG;
@@ -95,6 +120,7 @@ scaleControlSmaller.addEventListener('click', function () {
   }
 });
 
+// Событие клика которое увеличивает размер изображения и меняет value %
 scaleControlBigger.addEventListener('click', function () {
   if (scaleControlValueNumber < MAX_VALUE_NUMBER_IMG) {
     scaleControlValueNumber += STEP_OF_CHANGE_VALUE_IMG;
@@ -104,6 +130,48 @@ scaleControlBigger.addEventListener('click', function () {
     imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
   }
 });
+
+// Функция которая передает параметром нажатую кнопку в событие, а далее событие с помощью условий меняет классы изображения, добавляя соответствующие классы
+var modifiedImageEffect = function (currentRadioButton) {
+  currentRadioButton.addEventListener('click', function () {
+    currentRadioButton.checked = true;
+    imgUploadPreview.style.filter = null;
+    if (currentRadioButton.id === 'effect-none') {
+      imgUploadPreview.className = 'img-upload__preview';
+    } else if (currentRadioButton.id === 'effect-chrome') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
+    } else if (currentRadioButton.id === 'effect-sepia') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
+    } else if (currentRadioButton.id === 'effect-marvin') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
+    } else if (currentRadioButton.id === 'effect-phobos') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
+    } else if (currentRadioButton.id === 'effect-heat') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
+    }
+
+    // Событие отжатия клавиши при котором в img превью меняется фильтр эффекта в соответствии с положением пина на линейке
+    imgEffectChangeButton.addEventListener('mouseup', function () {
+      if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
+        imgUploadPreview.style.filter = 'grayscale(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
+        imgUploadPreview.style.filter = 'sepia(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
+        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
+        imgUploadPreview.style.filter = 'blur(' + positionEffectPin / 10 + 'px' + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
+        imgUploadPreview.style.filter = 'brightness(' + positionEffectPin / 10 + ')';
+      }
+    });
+  });
+};
+
+// Цикл который перебирает радиобаттоны и вызывает функцию модификации изображения
+for (i = 0; i < imgRadioEffectButton.length; i++) {
+  modifiedImageEffect(imgRadioEffectButton[i]);
+}
+
 
 // ЗАДАНИЕ 3 //
 
