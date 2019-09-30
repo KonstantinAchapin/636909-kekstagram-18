@@ -67,7 +67,7 @@ var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
 var imgForm = imgUploadSection.querySelector('.img-upload__form');
 var imgHashTags = imgUploadSection.querySelector('.text__hashtags');
 
-// Скрываем imgSliderEffect по умолчанию
+// Определяем, а потом скрываем imgSliderEffect по умолчанию
 var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
 imgSliderEffect.style.visibility = 'hidden';
 
@@ -214,12 +214,14 @@ imgHashTags.addEventListener('blur', function () {
 
 // Валидация введенных данных по хэш-тэгу
 imgHashTags.addEventListener('input', function () {
+  // Создаем массив хэш-тэгов
   function createHashTagsArray(stringToSplit) {
     var arrayOfStrings = stringToSplit.split(' ');
     return arrayOfStrings;
   }
 
-  var hashTagsArray = createHashTagsArray(imgHashTags.value);
+  var hashTagsArray = createHashTagsArray(imgHashTags.value.toLowerCase()
+  );
   for (i = 0; i < hashTagsArray.length; i++) {
     if (validityHashTag(hashTagsArray[i]) === false) {
       break;
@@ -228,6 +230,19 @@ imgHashTags.addEventListener('input', function () {
     }
   }
 
+  // Проверяем совпадение значений в массиве
+  function findSameArray(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = i + 1; j < arr.length; j++) {
+        if (arr[i] === arr[j]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // Функция валидации введенных данных
   function validityHashTag(hashTagText) {
     if (hashTagText.substr(0, 1) !== '#') {
       imgHashTags.setCustomValidity('Введите "#" первым символом хэш-тэга');
@@ -240,6 +255,9 @@ imgHashTags.addEventListener('input', function () {
       return false;
     } else if (hashTagsArray.length > 5) {
       imgHashTags.setCustomValidity('Введите не больше 5 хэш-тэгов');
+      return false;
+    } else if (findSameArray(hashTagsArray) === false) {
+      imgHashTags.setCustomValidity('Нельзя вводить одинаковые хэш-тэги');
       return false;
     } else {
       imgHashTags.setCustomValidity('');
