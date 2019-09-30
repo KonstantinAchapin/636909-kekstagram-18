@@ -67,6 +67,10 @@ var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
 var imgForm = imgUploadSection.querySelector('.img-upload__form');
 var imgHashTags = imgUploadSection.querySelector('.text__hashtags');
 
+// Скрываем imgSliderEffect по умолчанию
+var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
+imgSliderEffect.style.visibility = 'hidden';
+
 // Задаем начальное значение value размера изображения в 100%
 var scaleControlValueNumber = INITIAL_VALUE_IMG;
 scaleControlValue.setAttribute('value', scaleControlValueNumber + '%');
@@ -118,6 +122,8 @@ var closeImageEditing = function () {
   // Сброс размера картинки scale;
   imgUploadPreview.style.transform = 'scale(' + INITIAL_NUMBER_FOR_SIZE_IMG + ')';
   numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
+  // Сброс полосы регулировки эффекта на оригинал
+  imgSliderEffect.style.visibility = 'hidden';
   // Сброс фильтра изображения;
   imgUploadPreview.className = 'img-upload__preview';
   imgUploadPreview.style.filter = null;
@@ -152,6 +158,13 @@ var modifiedImageEffect = function (currentRadioButton) {
   currentRadioButton.addEventListener('click', function () {
     currentRadioButton.checked = true;
     imgUploadPreview.style.filter = null;
+    // Скрываем полосу фильтров на позиции - оригинал
+    if (imgRadioEffectButton[0].checked) {
+      imgSliderEffect.style.visibility = 'hidden';
+    } else {
+      imgSliderEffect.style.visibility = 'visible';
+    }
+
     if (currentRadioButton.id === 'effect-none') {
       imgUploadPreview.className = 'img-upload__preview';
     } else if (currentRadioButton.id === 'effect-chrome') {
