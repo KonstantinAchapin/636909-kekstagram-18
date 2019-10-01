@@ -9,9 +9,6 @@ var MAX_RANDOM_VALUE = 5;
 var MIN_RANDOM_COMMENTS = 10;
 var MAX_RANDOM_COMMENTS = 25;
 
-var MIN_BIG_PHOTO_NUMBER = 0;
-var MAX_BIG_PHOTO_NUMBER = 2;
-
 var ESC_KEYCODE = 27;
 var INITIAL_VALUE_IMG = 100;
 var STEP_OF_CHANGE_VALUE_IMG = 25;
@@ -25,7 +22,6 @@ var STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG = 0.25;
 var arrayObjectsPictures = []; // пустой массив объектов;
 var picturesContainer = document.querySelector('.pictures'); // контейнер куда мы вставляем фотографии
 
-// ЗАДАНИЕ 2
 // Получаем элементы разметки с помощью querySelector
 var pictureContain = document.querySelector('.big-picture');
 var popapCommentCount = pictureContain.querySelector('.social__comment-count');
@@ -34,20 +30,14 @@ var popapPictureImg = pictureContain.querySelector('.big-picture__img').querySel
 var popapDescription = pictureContain.querySelector('.social__caption');
 var popapLikesCount = pictureContain.querySelector('.likes-count');
 var popapCommentsCount = pictureContain.querySelector('.comments-count');
+// var popapImgDescriptionAvatar = pictureContain.querySelector('social__header .social__picture'); аватар описания фотографии
 var bigPictureComment = pictureContain.querySelectorAll('.social__comment');
-var popapImgAvatar = pictureContain.querySelectorAll('.social__comment');
-var popapSocialText = pictureContain.querySelectorAll('.social__comment');
-
-// Показываем попап с большой фотографией и ее описанием
-// pictureContain.classList.remove('hidden');
+var popapImgAvatar = pictureContain.querySelectorAll('.social__comment .social__picture');
+var popapSocialText = pictureContain.querySelectorAll('.social__comment .social__text');
 
 // Скрываем элементы с помощью добавления класса hidden элементам
 popapCommentCount.classList.add('hidden');
 popapCommentsLoader.classList.add('hidden');
-
-// ЗАДАНИЕ 2
-
-// ЗАДАНИЕ 3
 
 // Определяем рабочие элементы с помощью querySelector
 var imgUploadSection = document.querySelector('.img-upload');
@@ -296,8 +286,6 @@ imgComment.addEventListener('input', function () {
   }
 });
 
-// ЗАДАНИЕ 3 //
-
 var getRandomNumber = function (min, max) { // функция возвращающая случайное число от min до max;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -343,31 +331,50 @@ for (var i = 0; i <= 24; i++) { // цикл который создает 25 о�
   picturesContainer.appendChild(element);
 }
 
-// ЗАДАНИЕ 2
+// определяем в переменные все миниатюры изображения и кнопку закрытия
+var thumbnailsImg = document.querySelectorAll('.picture');
+var bigImgCloseButton = document.querySelector('#picture-cancel');
 
-var popupDataFilling = function (arrayIndex) { // функция которая подставляет данные в попап
-  popapPictureImg.src = 'img/logo-background-' + arrayObjectsPictures[arrayIndex].url + '.jpg';
-  popapDescription.textContent = arrayObjectsPictures[arrayIndex].description;
+// функция открывает попап и подставляет в него данные из объекта
+var openPopapImg = function (currentThumbnail, obj) {
+  currentThumbnail.addEventListener('click', function () {
+    pictureContain.classList.remove('hidden');
+    popapPictureImg.src = 'photos/' + obj.url + '.jpg';
+    popapDescription.textContent = obj.description;
+    popapLikesCount.textContent = obj.likes;
+    popapCommentsCount.textContent = obj.comments.length;
 
-  popapLikesCount.textContent = arrayObjectsPictures[arrayIndex].likes;
+    var createComment = function (avatar, comment, objComment) { // функция которая подставляет данные в комментарии
+      avatar.src = objComment.avatar;
+      comment.textContent = objComment.message;
+    };
 
-  popapCommentsCount.textContent = arrayObjectsPictures[arrayIndex].comments.length;
+    for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
+      createComment(popapImgAvatar[i], popapSocialText[i], obj.comments[i]);
+    }
 
-  for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
-    popapImgAvatar[i].querySelector('.social__picture');
-    popapImgAvatar[i].querySelector('.social__picture');
-    popapSocialText[i].querySelector('.social__text');
-  }
-
-  var createComment = function (numberComment) { // функция которая подставляет данные в комментарии
-    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
-    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
-    popapSocialText[numberComment].querySelector('.social__text').textContent = arrayObjectsPictures[numberComment].comments[numberComment].message;
-  };
-  createComment(0); // берем значения первого элемента массива
-  createComment(1); // берем значения второго элемента массива
+    // Добавляем событие закрытие по кнопке ESC
+    document.addEventListener('keydown', closePopapImgKeydown);
+  });
 };
 
-popupDataFilling(getRandomNumber(MIN_BIG_PHOTO_NUMBER, MAX_BIG_PHOTO_NUMBER));
+// Цикл перебирает миниатюры и отдает их в функцию
+for (i = 0; i < thumbnailsImg.length; i++) {
+  openPopapImg(thumbnailsImg[i], arrayObjectsPictures[i]);
+}
 
-// ЗАДАНИЕ 2
+bigImgCloseButton.addEventListener('click', function () {
+  closePopapImg();
+});
+
+// функция закрытия попапа
+var closePopapImg = function () {
+  pictureContain.classList.add('hidden');
+};
+
+// функция закрытия попапа на кнопку
+var closePopapImgKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopapImg();
+  }
+};
