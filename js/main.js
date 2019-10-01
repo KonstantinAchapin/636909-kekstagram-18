@@ -169,14 +169,19 @@ var modifiedImageEffect = function (currentRadioButton) {
       imgUploadPreview.className = 'img-upload__preview';
     } else if (currentRadioButton.id === 'effect-chrome') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
+      imgUploadPreview.style.filter = 'grayscale(1)';
     } else if (currentRadioButton.id === 'effect-sepia') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
+      imgUploadPreview.style.filter = 'sepia(1)';
     } else if (currentRadioButton.id === 'effect-marvin') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
+      imgUploadPreview.style.filter = 'invert(100%)';
     } else if (currentRadioButton.id === 'effect-phobos') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
+      imgUploadPreview.style.filter = 'blur(3px)';
     } else if (currentRadioButton.id === 'effect-heat') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
+      imgUploadPreview.style.filter = 'brightness(3)';
     }
 
     // Событие отжатия клавиши от пина при котором меняется фильтр эффекта в соответствии с положением пина на линейке (сейчас оно 20%)
@@ -186,7 +191,7 @@ var modifiedImageEffect = function (currentRadioButton) {
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
         imgUploadPreview.style.filter = 'sepia(' + positionEffectPin / 100 + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
-        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + ')';
+        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + '%' + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
         imgUploadPreview.style.filter = 'blur(' + Math.round((positionEffectPin / 4) / 10) + 'px' + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
