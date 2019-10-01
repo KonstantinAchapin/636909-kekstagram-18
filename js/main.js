@@ -12,30 +12,267 @@ var MAX_RANDOM_COMMENTS = 25;
 var MIN_BIG_PHOTO_NUMBER = 0;
 var MAX_BIG_PHOTO_NUMBER = 2;
 
+var ESC_KEYCODE = 27;
+var INITIAL_VALUE_IMG = 100;
+var STEP_OF_CHANGE_VALUE_IMG = 25;
+var MIN_VALUE_NUMBER_IMG = 25;
+var MAX_VALUE_NUMBER_IMG = 100;
+
+var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
+var STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG = 0.25;
+
+
 var arrayObjectsPictures = []; // пустой массив объектов;
 var picturesContainer = document.querySelector('.pictures'); // контейнер куда мы вставляем фотографии
 
 // ЗАДАНИЕ 2
 // Получаем элементы разметки с помощью querySelector
 var pictureContain = document.querySelector('.big-picture');
-var popapCommentCount = document.querySelector('.social__comment-count');
-var popapCommentsLoader = document.querySelector('.comments-loader');
-var popapPictureImg = document.querySelector('.big-picture__img').querySelector('img');
-var popapDescription = document.querySelector('.social__caption');
-var popapLikesCount = document.querySelector('.likes-count');
-var popapCommentsCount = document.querySelector('.comments-count');
-var bigPictureComment = document.querySelectorAll('.social__comment');
-var popapImgAvatar = document.querySelectorAll('.social__comment');
-var popapSocialText = document.querySelectorAll('.social__comment');
+var popapCommentCount = pictureContain.querySelector('.social__comment-count');
+var popapCommentsLoader = pictureContain.querySelector('.comments-loader');
+var popapPictureImg = pictureContain.querySelector('.big-picture__img').querySelector('img');
+var popapDescription = pictureContain.querySelector('.social__caption');
+var popapLikesCount = pictureContain.querySelector('.likes-count');
+var popapCommentsCount = pictureContain.querySelector('.comments-count');
+var bigPictureComment = pictureContain.querySelectorAll('.social__comment');
+var popapImgAvatar = pictureContain.querySelectorAll('.social__comment');
+var popapSocialText = pictureContain.querySelectorAll('.social__comment');
 
 // Показываем попап с большой фотографией и ее описанием
-pictureContain.classList.remove('hidden');
+// pictureContain.classList.remove('hidden');
 
 // Скрываем элементы с помощью добавления класса hidden элементам
 popapCommentCount.classList.add('hidden');
 popapCommentsLoader.classList.add('hidden');
 
 // ЗАДАНИЕ 2
+
+// ЗАДАНИЕ 3
+
+// Определяем рабочие элементы с помощью querySelector
+var imgUploadSection = document.querySelector('.img-upload');
+var imgUploadForm = imgUploadSection.querySelector('#upload-select-image');
+var imgEditingForm = imgUploadSection.querySelector('.img-upload__overlay');
+var imgUserDownloader = imgUploadSection.querySelector('#upload-file');
+var imgButtonClose = imgUploadSection.querySelector('#upload-cancel');
+
+var scaleControlSmaller = imgUploadSection.querySelector('.scale__control--smaller');
+var scaleControlBigger = imgUploadSection.querySelector('.scale__control--bigger');
+var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
+
+var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
+var imgEffectChangeButton = imgUploadSection.querySelector('.effect-level__pin');
+var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
+
+var imgForm = imgUploadSection.querySelector('.img-upload__form');
+var imgHashTags = imgUploadSection.querySelector('.text__hashtags');
+
+// Определяем, а потом скрываем imgSliderEffect по умолчанию
+var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
+imgSliderEffect.style.visibility = 'hidden';
+
+// Задаем начальное значение value размера изображения в 100%
+var scaleControlValueNumber = INITIAL_VALUE_IMG;
+scaleControlValue.setAttribute('value', scaleControlValueNumber + '%');
+
+// Определяем переменную которая хранит размер размер изображения
+var imgUploadPreview = imgUploadSection.querySelector('.img-upload__preview');
+var numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
+
+// Определяем переменную которая хранит позицию пина на линейке изменения эффекта
+var positionEffectPin = 0;
+
+// Событие открытия попапа после загрузки фотографии
+imgUserDownloader.addEventListener('change', function () {
+  openImageEditing();
+
+  // Находим позицию пина на линейке изменения и делаем пропорцию в %
+  var posPinX = imgEffectChangeButton.offsetLeft;
+  var widthParentPin = imgEffectLevelLine.offsetWidth;
+  positionEffectPin = Math.round((posPinX / widthParentPin) * 100);
+
+  // Добавляем событие закрытие по кнопке ESC
+  document.addEventListener('keydown', buttonClickHandler);
+});
+
+// Функция закрытия по кнопке ESC
+var buttonClickHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeImageEditing();
+  }
+};
+
+// Функция открытия попапа
+var openImageEditing = function () {
+  imgEditingForm.classList.remove('hidden');
+};
+
+// Событие закрытия попапа
+imgButtonClose.addEventListener('click', function () {
+  closeImageEditing();
+});
+
+// Функция закрытия попапа
+var closeImageEditing = function () {
+  imgEditingForm.classList.add('hidden');
+
+  // Сброс значения размера value %;
+  scaleControlValue.setAttribute('value', INITIAL_VALUE_IMG + '%');
+  scaleControlValueNumber = INITIAL_VALUE_IMG;
+  // Сброс размера картинки scale;
+  imgUploadPreview.style.transform = 'scale(' + INITIAL_NUMBER_FOR_SIZE_IMG + ')';
+  numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
+  // Сброс полосы регулировки эффекта на оригинал
+  imgSliderEffect.style.visibility = 'hidden';
+  // Сброс фильтра изображения;
+  imgUploadPreview.className = 'img-upload__preview';
+  imgUploadPreview.style.filter = null;
+  // Сброс заполненной формы;
+  imgUploadForm.reset();
+};
+
+// Событие клика которое уменьшает размер изображения и меняет value %
+scaleControlSmaller.addEventListener('click', function () {
+  if (scaleControlValueNumber > MIN_VALUE_NUMBER_IMG) {
+    scaleControlValueNumber -= STEP_OF_CHANGE_VALUE_IMG;
+    scaleControlValue.setAttribute('value', scaleControlValueNumber + '%');
+
+    numberForSize -= STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG;
+    imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
+  }
+});
+
+// Событие клика которое увеличивает размер изображения и меняет value %
+scaleControlBigger.addEventListener('click', function () {
+  if (scaleControlValueNumber < MAX_VALUE_NUMBER_IMG) {
+    scaleControlValueNumber += STEP_OF_CHANGE_VALUE_IMG;
+    scaleControlValue.setAttribute('value', scaleControlValueNumber + '%');
+
+    numberForSize += STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG;
+    imgUploadPreview.style.transform = 'scale(' + numberForSize + ')';
+  }
+});
+
+// Функция которая передает в событие нажатую кнопку, а дальше событие с помощью условий меняет классы изображения, добавляя соответствующие фильтры
+var modifiedImageEffect = function (currentRadioButton) {
+  currentRadioButton.addEventListener('click', function () {
+    currentRadioButton.checked = true;
+    imgUploadPreview.style.filter = null;
+    // Скрываем полосу фильтров на позиции - оригинал
+    if (imgRadioEffectButton[0].checked) {
+      imgSliderEffect.style.visibility = 'hidden';
+    } else {
+      imgSliderEffect.style.visibility = 'visible';
+    }
+
+    if (currentRadioButton.id === 'effect-none') {
+      imgUploadPreview.className = 'img-upload__preview';
+    } else if (currentRadioButton.id === 'effect-chrome') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
+    } else if (currentRadioButton.id === 'effect-sepia') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
+    } else if (currentRadioButton.id === 'effect-marvin') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
+    } else if (currentRadioButton.id === 'effect-phobos') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
+    } else if (currentRadioButton.id === 'effect-heat') {
+      imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
+    }
+
+    // Событие отжатия клавиши от пина при котором меняется фильтр эффекта в соответствии с положением пина на линейке (сейчас оно 20%)
+    imgEffectChangeButton.addEventListener('mouseup', function () {
+      if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
+        imgUploadPreview.style.filter = 'grayscale(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
+        imgUploadPreview.style.filter = 'sepia(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
+        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
+        imgUploadPreview.style.filter = 'blur(' + Math.round((positionEffectPin / 4) / 10) + 'px' + ')';
+      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
+        imgUploadPreview.style.filter = 'brightness(' + Math.round((positionEffectPin / 3) / 10) + ')';
+      }
+    });
+  });
+};
+
+// Цикл который перебирает радиобаттоны и вызывает функцию модификации изображения, добавления ей фильтров
+for (i = 0; i < imgRadioEffectButton.length; i++) {
+  modifiedImageEffect(imgRadioEffectButton[i]);
+}
+
+// Валидация хэш-тэгов
+
+// Событие focus отменяет закрытие попапа на ESC
+imgHashTags.addEventListener('focus', function () {
+  document.removeEventListener('keydown', buttonClickHandler);
+});
+// Событие blur снова добавляет закрытие попапа на ESC
+imgHashTags.addEventListener('blur', function () {
+  document.addEventListener('keydown', buttonClickHandler);
+});
+
+// Валидация введенных данных по хэш-тэгу
+imgHashTags.addEventListener('input', function () {
+  // Создаем массив хэш-тэгов
+  function createHashTagsArray(stringToSplit) {
+    var arrayOfStrings = stringToSplit.split(' ');
+    return arrayOfStrings;
+  }
+
+  var hashTagsArray = createHashTagsArray(imgHashTags.value.toLowerCase()
+  );
+  for (i = 0; i < hashTagsArray.length; i++) {
+    if (validityHashTag(hashTagsArray[i]) === false) {
+      break;
+    } else {
+      validityHashTag(hashTagsArray[i]);
+    }
+  }
+
+  // Проверяем совпадение значений в массиве
+  function findSameArray(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = i + 1; j < arr.length; j++) {
+        if (arr[i] === arr[j]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // Функция валидации введенных данных
+  function validityHashTag(hashTagText) {
+    if (hashTagText.substr(0, 1) !== '#') {
+      imgHashTags.setCustomValidity('Введите "#" первым символом хэш-тэга');
+      return false;
+    } else if (hashTagText.length < 2) {
+      imgHashTags.setCustomValidity('Введите название хэш-тэга не менее 2-ух символов');
+      return false;
+    } else if (hashTagText.length >= 20) {
+      imgHashTags.setCustomValidity('Хэш-тэг должен быть не более 20 символов');
+      return false;
+    } else if (hashTagsArray.length > 5) {
+      imgHashTags.setCustomValidity('Введите не больше 5 хэш-тэгов');
+      return false;
+    } else if (findSameArray(hashTagsArray) === false) {
+      imgHashTags.setCustomValidity('Нельзя вводить одинаковые хэш-тэги');
+      return false;
+    } else {
+      imgHashTags.setCustomValidity('');
+      return true;
+    }
+  }
+});
+
+// Временная отмена отправки данных для удобства
+imgForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+  // alert('Сообщение отправлено!');
+});
+
+// ЗАДАНИЕ 3 //
 
 var getRandomNumber = function (min, max) { // функция возвращающая случайное число от min до max;
   return Math.floor(Math.random() * (max - min + 1)) + min;
