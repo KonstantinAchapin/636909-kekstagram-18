@@ -66,6 +66,7 @@ var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
 
 var imgForm = imgUploadSection.querySelector('.img-upload__form');
 var imgHashTags = imgUploadSection.querySelector('.text__hashtags');
+var imgComment = imgUploadSection.querySelector('.text__description');
 
 // Определяем, а потом скрываем imgSliderEffect по умолчанию
 var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
@@ -217,6 +218,15 @@ imgHashTags.addEventListener('blur', function () {
   document.addEventListener('keydown', buttonClickHandler);
 });
 
+// Событие focus отменяет закрытие попапа на ESC
+imgComment.addEventListener('focus', function () {
+  document.removeEventListener('keydown', buttonClickHandler);
+});
+// Событие blur снова добавляет закрытие попапа на ESC
+imgComment.addEventListener('blur', function () {
+  document.addEventListener('keydown', buttonClickHandler);
+});
+
 // Валидация введенных данных по хэш-тэгу
 imgHashTags.addEventListener('input', function () {
   // Создаем массив хэш-тэгов
@@ -275,6 +285,15 @@ imgHashTags.addEventListener('input', function () {
 imgForm.addEventListener('submit', function (event) {
   event.preventDefault();
   // alert('Сообщение отправлено!');
+});
+
+// Валидация введенных данных по комментарию пользователя
+imgComment.addEventListener('input', function () {
+  if (imgComment.value.length >= 140) {
+    imgComment.setCustomValidity('Размер комментария не должен превышать 140 символов');
+  } else {
+    imgComment.setCustomValidity('');
+  }
 });
 
 // ЗАДАНИЕ 3 //
