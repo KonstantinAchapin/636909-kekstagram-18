@@ -1,5 +1,7 @@
 'use strict';
 
+var NUMBER_OF_MOK_OBJECT = 24;
+
 var MIN_NUMBER_LIKES = 15;
 var MAX_NUMBER_LIKES = 150;
 
@@ -17,6 +19,13 @@ var MAX_VALUE_NUMBER_IMG = 100;
 
 var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
 var STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG = 0.25;
+
+var BEGINNING_LINE_STRING = 0;
+var FIRST_CHARACTER_STRING = 1;
+var MIN_HASHTAG_SIZE = 2;
+var MAX_HASHTAG_SIZE = 20;
+var MAX_HASHTAGS_AMOUNT = 5;
+var MAX_COMMENT_SIZE = 140;
 
 
 var arrayObjectsPictures = []; // пустой массив объектов;
@@ -249,16 +258,16 @@ imgHashTags.addEventListener('input', function () {
 
   // Функция валидации введенных данных
   function validityHashTag(hashTagText) {
-    if (hashTagText.substr(0, 1) !== '#') {
+    if (hashTagText.substr(BEGINNING_LINE_STRING, FIRST_CHARACTER_STRING) !== '#') {
       imgHashTags.setCustomValidity('Введите "#" первым символом хэш-тэга');
       return false;
-    } else if (hashTagText.length < 2) {
+    } else if (hashTagText.length < MIN_HASHTAG_SIZE) {
       imgHashTags.setCustomValidity('Введите название хэш-тэга не менее 2-ух символов');
       return false;
-    } else if (hashTagText.length >= 20) {
+    } else if (hashTagText.length >= MAX_HASHTAG_SIZE) {
       imgHashTags.setCustomValidity('Хэш-тэг должен быть не более 20 символов');
       return false;
-    } else if (hashTagsArray.length > 5) {
+    } else if (hashTagsArray.length > MAX_HASHTAGS_AMOUNT) {
       imgHashTags.setCustomValidity('Введите не больше 5 хэш-тэгов');
       return false;
     } else if (findSameArray(hashTagsArray) === false) {
@@ -274,12 +283,11 @@ imgHashTags.addEventListener('input', function () {
 // Временная отмена отправки данных для удобства
 imgForm.addEventListener('submit', function (event) {
   event.preventDefault();
-  // alert('Сообщение отправлено!');
 });
 
 // Валидация введенных данных по комментарию пользователя
 imgComment.addEventListener('input', function () {
-  if (imgComment.value.length >= 140) {
+  if (imgComment.value.length >= MAX_COMMENT_SIZE) {
     imgComment.setCustomValidity('Размер комментария не должен превышать 140 символов');
   } else {
     imgComment.setCustomValidity('');
@@ -324,7 +332,7 @@ var getPictureElement = function (arrayIndex) { // ф-ция заполняет 
   return document.querySelector('#picture').content.querySelector('.picture');
 };
 
-for (var i = 0; i <= 24; i++) { // цикл который создает 25 объектов и делает из их значений 25 DOM элементов вставляя их в конец #picture
+for (var i = 0; i <= NUMBER_OF_MOK_OBJECT; i++) { // цикл который создает 25 объектов и делает из их значений 25 DOM элементов вставляя их в конец #picture
   arrayObjectsPictures.push(getPicturesMocks(i));
   var template = getPictureElement(i);
   var element = template.cloneNode(true);
@@ -344,18 +352,18 @@ var openPopapImg = function (currentThumbnail, obj) {
     popapLikesCount.textContent = obj.likes;
     popapCommentsCount.textContent = obj.comments.length;
 
-    var createComment = function (avatar, comment, objComment) { // функция которая подставляет данные в комментарии
-      avatar.src = objComment.avatar;
-      comment.textContent = objComment.message;
-    };
-
     for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
-      createComment(popapImgAvatar[i], popapSocialText[i], obj.comments[i]);
+      loadCommentsInPopap(popapImgAvatar[i], popapSocialText[i], obj.comments[i]);
     }
 
     // Добавляем событие закрытие по кнопке ESC
     document.addEventListener('keydown', closePopapImgKeydown);
   });
+};
+
+var loadCommentsInPopap = function (avatar, comment, objComment) { // функция которая подставляет данные в комментарии
+  avatar.src = objComment.avatar;
+  comment.textContent = objComment.message;
 };
 
 // Цикл перебирает миниатюры и отдает их в функцию
