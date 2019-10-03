@@ -1,5 +1,7 @@
 'use strict';
 
+var NUMBER_OF_MOK_OBJECT = 24;
+
 var MIN_NUMBER_LIKES = 15;
 var MAX_NUMBER_LIKES = 150;
 
@@ -8,9 +10,6 @@ var MAX_RANDOM_VALUE = 5;
 
 var MIN_RANDOM_COMMENTS = 10;
 var MAX_RANDOM_COMMENTS = 25;
-
-var MIN_BIG_PHOTO_NUMBER = 0;
-var MAX_BIG_PHOTO_NUMBER = 2;
 
 var ESC_KEYCODE = 27;
 var INITIAL_VALUE_IMG = 100;
@@ -21,11 +20,17 @@ var MAX_VALUE_NUMBER_IMG = 100;
 var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
 var STEP_OF_CHANGE_NUMBER_FOR_SIZE_IMG = 0.25;
 
+var BEGINNING_LINE_STRING = 0;
+var FIRST_CHARACTER_STRING = 1;
+var MIN_HASHTAG_SIZE = 2;
+var MAX_HASHTAG_SIZE = 20;
+var MAX_HASHTAGS_AMOUNT = 5;
+var MAX_COMMENT_SIZE = 140;
+
 
 var arrayObjectsPictures = []; // пустой массив объектов;
 var picturesContainer = document.querySelector('.pictures'); // контейнер куда мы вставляем фотографии
 
-// ЗАДАНИЕ 2
 // Получаем элементы разметки с помощью querySelector
 var pictureContain = document.querySelector('.big-picture');
 var popapCommentCount = pictureContain.querySelector('.social__comment-count');
@@ -34,20 +39,14 @@ var popapPictureImg = pictureContain.querySelector('.big-picture__img').querySel
 var popapDescription = pictureContain.querySelector('.social__caption');
 var popapLikesCount = pictureContain.querySelector('.likes-count');
 var popapCommentsCount = pictureContain.querySelector('.comments-count');
+// var popapImgDescriptionAvatar = pictureContain.querySelector('social__header .social__picture'); аватар описания фотографии
 var bigPictureComment = pictureContain.querySelectorAll('.social__comment');
-var popapImgAvatar = pictureContain.querySelectorAll('.social__comment');
-var popapSocialText = pictureContain.querySelectorAll('.social__comment');
-
-// Показываем попап с большой фотографией и ее описанием
-// pictureContain.classList.remove('hidden');
+var popapImgAvatar = pictureContain.querySelectorAll('.social__comment .social__picture');
+var popapSocialText = pictureContain.querySelectorAll('.social__comment .social__text');
 
 // Скрываем элементы с помощью добавления класса hidden элементам
 popapCommentCount.classList.add('hidden');
 popapCommentsLoader.classList.add('hidden');
-
-// ЗАДАНИЕ 2
-
-// ЗАДАНИЕ 3
 
 // Определяем рабочие элементы с помощью querySelector
 var imgUploadSection = document.querySelector('.img-upload');
@@ -66,6 +65,7 @@ var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
 
 var imgForm = imgUploadSection.querySelector('.img-upload__form');
 var imgHashTags = imgUploadSection.querySelector('.text__hashtags');
+var imgComment = imgUploadSection.querySelector('.text__description');
 
 // Определяем, а потом скрываем imgSliderEffect по умолчанию
 var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
@@ -169,14 +169,19 @@ var modifiedImageEffect = function (currentRadioButton) {
       imgUploadPreview.className = 'img-upload__preview';
     } else if (currentRadioButton.id === 'effect-chrome') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
+      imgUploadPreview.style.filter = 'grayscale(1)';
     } else if (currentRadioButton.id === 'effect-sepia') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
+      imgUploadPreview.style.filter = 'sepia(1)';
     } else if (currentRadioButton.id === 'effect-marvin') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
+      imgUploadPreview.style.filter = 'invert(100%)';
     } else if (currentRadioButton.id === 'effect-phobos') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
+      imgUploadPreview.style.filter = 'blur(3px)';
     } else if (currentRadioButton.id === 'effect-heat') {
       imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
+      imgUploadPreview.style.filter = 'brightness(3)';
     }
 
     // Событие отжатия клавиши от пина при котором меняется фильтр эффекта в соответствии с положением пина на линейке (сейчас оно 20%)
@@ -186,7 +191,7 @@ var modifiedImageEffect = function (currentRadioButton) {
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
         imgUploadPreview.style.filter = 'sepia(' + positionEffectPin / 100 + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
-        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + ')';
+        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + '%' + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
         imgUploadPreview.style.filter = 'blur(' + Math.round((positionEffectPin / 4) / 10) + 'px' + ')';
       } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
@@ -209,6 +214,15 @@ imgHashTags.addEventListener('focus', function () {
 });
 // Событие blur снова добавляет закрытие попапа на ESC
 imgHashTags.addEventListener('blur', function () {
+  document.addEventListener('keydown', buttonClickHandler);
+});
+
+// Событие focus отменяет закрытие попапа на ESC
+imgComment.addEventListener('focus', function () {
+  document.removeEventListener('keydown', buttonClickHandler);
+});
+// Событие blur снова добавляет закрытие попапа на ESC
+imgComment.addEventListener('blur', function () {
   document.addEventListener('keydown', buttonClickHandler);
 });
 
@@ -244,16 +258,16 @@ imgHashTags.addEventListener('input', function () {
 
   // Функция валидации введенных данных
   function validityHashTag(hashTagText) {
-    if (hashTagText.substr(0, 1) !== '#') {
+    if (hashTagText.substr(BEGINNING_LINE_STRING, FIRST_CHARACTER_STRING) !== '#') {
       imgHashTags.setCustomValidity('Введите "#" первым символом хэш-тэга');
       return false;
-    } else if (hashTagText.length < 2) {
+    } else if (hashTagText.length < MIN_HASHTAG_SIZE) {
       imgHashTags.setCustomValidity('Введите название хэш-тэга не менее 2-ух символов');
       return false;
-    } else if (hashTagText.length >= 20) {
+    } else if (hashTagText.length >= MAX_HASHTAG_SIZE) {
       imgHashTags.setCustomValidity('Хэш-тэг должен быть не более 20 символов');
       return false;
-    } else if (hashTagsArray.length > 5) {
+    } else if (hashTagsArray.length > MAX_HASHTAGS_AMOUNT) {
       imgHashTags.setCustomValidity('Введите не больше 5 хэш-тэгов');
       return false;
     } else if (findSameArray(hashTagsArray) === false) {
@@ -269,10 +283,16 @@ imgHashTags.addEventListener('input', function () {
 // Временная отмена отправки данных для удобства
 imgForm.addEventListener('submit', function (event) {
   event.preventDefault();
-  // alert('Сообщение отправлено!');
 });
 
-// ЗАДАНИЕ 3 //
+// Валидация введенных данных по комментарию пользователя
+imgComment.addEventListener('input', function () {
+  if (imgComment.value.length >= MAX_COMMENT_SIZE) {
+    imgComment.setCustomValidity('Размер комментария не должен превышать 140 символов');
+  } else {
+    imgComment.setCustomValidity('');
+  }
+});
 
 var getRandomNumber = function (min, max) { // функция возвращающая случайное число от min до max;
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -312,38 +332,57 @@ var getPictureElement = function (arrayIndex) { // ф-ция заполняет 
   return document.querySelector('#picture').content.querySelector('.picture');
 };
 
-for (var i = 0; i <= 24; i++) { // цикл который создает 25 объектов и делает из их значений 25 DOM элементов вставляя их в конец #picture
+for (var i = 0; i <= NUMBER_OF_MOK_OBJECT; i++) { // цикл который создает 25 объектов и делает из их значений 25 DOM элементов вставляя их в конец #picture
   arrayObjectsPictures.push(getPicturesMocks(i));
   var template = getPictureElement(i);
   var element = template.cloneNode(true);
   picturesContainer.appendChild(element);
 }
 
-// ЗАДАНИЕ 2
+// определяем в переменные все миниатюры изображения и кнопку закрытия
+var thumbnailsImg = document.querySelectorAll('.picture');
+var bigImgCloseButton = document.querySelector('#picture-cancel');
 
-var popupDataFilling = function (arrayIndex) { // функция которая подставляет данные в попап
-  popapPictureImg.src = 'img/logo-background-' + arrayObjectsPictures[arrayIndex].url + '.jpg';
-  popapDescription.textContent = arrayObjectsPictures[arrayIndex].description;
+// функция открывает попап и подставляет в него данные из объекта
+var openPopapImg = function (currentThumbnail, obj) {
+  currentThumbnail.addEventListener('click', function () {
+    pictureContain.classList.remove('hidden');
+    popapPictureImg.src = 'photos/' + obj.url + '.jpg';
+    popapDescription.textContent = obj.description;
+    popapLikesCount.textContent = obj.likes;
+    popapCommentsCount.textContent = obj.comments.length;
 
-  popapLikesCount.textContent = arrayObjectsPictures[arrayIndex].likes;
+    for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
+      loadCommentsInPopap(popapImgAvatar[i], popapSocialText[i], obj.comments[i]);
+    }
 
-  popapCommentsCount.textContent = arrayObjectsPictures[arrayIndex].comments.length;
-
-  for (i = 0; i < bigPictureComment.length; i++) { // цикл перебирающий все комментарии
-    popapImgAvatar[i].querySelector('.social__picture');
-    popapImgAvatar[i].querySelector('.social__picture');
-    popapSocialText[i].querySelector('.social__text');
-  }
-
-  var createComment = function (numberComment) { // функция которая подставляет данные в комментарии
-    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
-    popapImgAvatar[numberComment].querySelector('.social__picture').src = arrayObjectsPictures[numberComment].comments[numberComment].avatar;
-    popapSocialText[numberComment].querySelector('.social__text').textContent = arrayObjectsPictures[numberComment].comments[numberComment].message;
-  };
-  createComment(0); // берем значения первого элемента массива
-  createComment(1); // берем значения второго элемента массива
+    // Добавляем событие закрытие по кнопке ESC
+    document.addEventListener('keydown', closePopapImgKeydown);
+  });
 };
 
-popupDataFilling(getRandomNumber(MIN_BIG_PHOTO_NUMBER, MAX_BIG_PHOTO_NUMBER));
+var loadCommentsInPopap = function (avatar, comment, objComment) { // функция которая подставляет данные в комментарии
+  avatar.src = objComment.avatar;
+  comment.textContent = objComment.message;
+};
 
-// ЗАДАНИЕ 2
+// Цикл перебирает миниатюры и отдает их в функцию
+for (i = 0; i < thumbnailsImg.length; i++) {
+  openPopapImg(thumbnailsImg[i], arrayObjectsPictures[i]);
+}
+
+bigImgCloseButton.addEventListener('click', function () {
+  closePopapImg();
+});
+
+// функция закрытия попапа
+var closePopapImg = function () {
+  pictureContain.classList.add('hidden');
+};
+
+// функция закрытия попапа на кнопку
+var closePopapImgKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopapImg();
+  }
+};
