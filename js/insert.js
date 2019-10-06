@@ -17,9 +17,12 @@
   };
 
   var fragment = document.createDocumentFragment();
-  // цикл вызывает функцию заполнения объекта и добавляет элементы в разметку
-  for (var i = 0; i <= window.creature.NUMBER_OF_MOK_OBJECT; i++) {
-    fragment.appendChild(fillPictureElement(i));
-  }
+  var renderImg = function (array) {
+    // цикл вызывает функцию заполнения объекта и добавляет элементы в разметку
+    for (var i = 0; i <= window.creature.NUMBER_OF_MOK_OBJECT; i++) {
+      fragment.appendChild(array(i));
+    }
+  };
+  renderImg(fillPictureElement);
   imgContainer.appendChild(fragment);
 })();
