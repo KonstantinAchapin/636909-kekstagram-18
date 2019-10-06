@@ -3,73 +3,76 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  window.ESC_KEYCODE = ESC_KEYCODE;
 
-  window.preview = {
-    ESC_KEYCODE: ESC_KEYCODE
-  };
-
-  var pictureContain = document.querySelector('.big-picture');
-  var popapCommentCount = pictureContain.querySelector('.social__comment-count');
-  var popapCommentsLoader = pictureContain.querySelector('.comments-loader');
+  var bigPicture = document.querySelector('.big-picture');
+  var popupCommentCount = bigPicture.querySelector('.social__comment-count');
+  var popupCommentsLoader = bigPicture.querySelector('.comments-loader');
 
   // скрываем элементы с помощью добавления класса hidden элементам
-  popapCommentCount.classList.add('hidden');
-  popapCommentsLoader.classList.add('hidden');
+  popupCommentCount.classList.add('hidden');
+  popupCommentsLoader.classList.add('hidden');
 
   // определяем переменные - изображения и кнопку закрытия
-  var popapPictureImg = pictureContain.querySelector('.big-picture__img').querySelector('img');
-  var popapDescription = pictureContain.querySelector('.social__caption');
-  var popapLikesCount = pictureContain.querySelector('.likes-count');
-  var popapCommentsCount = pictureContain.querySelector('.comments-count');
+  var popupPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
+  var popupDescription = bigPicture.querySelector('.social__caption');
+  var popupLikesCount = bigPicture.querySelector('.likes-count');
+  var popupCommentsCount = bigPicture.querySelector('.comments-count');
   var thumbnailsImg = document.querySelectorAll('.picture');
   var bigImgCloseButton = document.querySelector('#picture-cancel');
-  var bigPictureComment = pictureContain.querySelectorAll('.social__comment');
-  var popapImgAvatar = pictureContain.querySelectorAll('.social__comment .social__picture');
-  var popapSocialText = pictureContain.querySelectorAll('.social__comment .social__text');
+  var bigPictureComment = bigPicture.querySelectorAll('.social__comment');
+  var popupImgAvatar = bigPicture.querySelectorAll('.social__comment .social__picture');
+  var popupSocialText = bigPicture.querySelectorAll('.social__comment .social__text');
 
   // функция открывает попап и подставляет в него данные из объекта
-  var openPopapImg = function (currentThumbnail, obj) {
+  var openPopupImg = function (currentThumbnail, obj) {
     currentThumbnail.addEventListener('click', function () {
-      pictureContain.classList.remove('hidden');
-      popapPictureImg.src = 'photos/' + obj.url + '.jpg';
-      popapDescription.textContent = obj.description;
-      popapLikesCount.textContent = obj.likes;
-      popapCommentsCount.textContent = obj.comments.length;
+      bigPicture.classList.remove('hidden');
+      popupPictureImg.src = 'photos/' + obj.url + '.jpg';
+      popupDescription.textContent = obj.description;
+      popupLikesCount.textContent = obj.likes;
+      popupCommentsCount.textContent = obj.comments.length;
 
       // цикл перебирающий все комментарии
       for (var i = 0; i < bigPictureComment.length; i++) {
-        loadCommentsInPopap(popapImgAvatar[i], popapSocialText[i], obj.comments[i]);
+        loadCommentsInPopup(popupImgAvatar[i], popupSocialText[i], obj.comments[i]);
       }
 
       // добавляет событие закрытия ПОПАПА на кнопку ESC
-      document.addEventListener('keydown', closePopapImgKeydown);
+      document.addEventListener('keydown', closePopupImgKeydown);
     });
   };
 
   // функция которая подставляет автар и текст в каждый комментарий
-  var loadCommentsInPopap = function (avatar, comment, objComment) {
+  var loadCommentsInPopup = function (avatar, comment, objComment) {
     avatar.src = objComment.avatar;
     comment.textContent = objComment.message;
   };
 
-  // цикл перебирает миниатюры и отдает их в функцию
-  for (var i = 0; i < thumbnailsImg.length; i++) {
-    openPopapImg(thumbnailsImg[i], window.creature.arrayObjectsPictures[i]);
-  }
+  var cicle = function (hoop) {
+    // цикл перебирает миниатюры и отдает их в функцию
+    for (var i = 0; i < hoop.length; i++) {
+      openPopupImg(hoop[i], window.creature.arrayObjectsPictures[i]);
+    }
+  };
+
+  cicle(thumbnailsImg);
 
   bigImgCloseButton.addEventListener('click', function () {
-    closePopapImg();
+    closePopupImg();
   });
 
   // функция закрытия попапа
-  var closePopapImg = function () {
-    pictureContain.classList.add('hidden');
+  var closePopupImg = function () {
+    bigPicture.classList.add('hidden');
+    document.removeEventListener('keydown', closePopupImgKeydown);
   };
 
   // функция закрытия попапа на кнопку
-  var closePopapImgKeydown = function (evt) {
-    if (evt.keyCode === window.preview.ESC_KEYCODE) {
-      closePopapImg();
+  var closePopupImgKeydown = function (evt) {
+    if (evt.keyCode === window.ESC_KEYCODE) {
+      closePopupImg();
+      document.removeEventListener('keydown', closePopupImgKeydown);
     }
   };
 })();

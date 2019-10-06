@@ -2,23 +2,24 @@
 'use strict';
 
 (function () {
-  // контейнер для вставки превьюшки фото
-  var picturesContainer = document.querySelector('.pictures');
+  // контейнер для вставки превьюшек фото
+  var imgContainer = document.querySelector('.pictures');
+  var imgItem = document.querySelector('#picture').content.querySelector('.picture');
 
   // функция заполняет DOM элемент из свойств и значений объектов ранее созданного массива arrayObjectsPictures[]
-  var getPictureElement = function (arrayIndex) {
-    var picture = document.querySelector('#picture');
-    picture.content.querySelector('.picture__img').src = 'photos/' + window.creature.arrayObjectsPictures[arrayIndex].url + '.jpg';
-    picture.content.querySelector('.picture__comments');
-    picture.content.querySelector('.picture__likes').textContent = window.creature.arrayObjectsPictures[arrayIndex].likes;
-    picture.content.querySelector('.picture__comments').textContent = window.creature.arrayObjectsPictures[arrayIndex].comments.length;
-    return document.querySelector('#picture').content.querySelector('.picture');
+  var fillPictureElement = function (arrayIndex) {
+    var imgElement = imgItem.cloneNode(true);
+    imgElement.querySelector('.picture__img').src = 'photos/' + window.creature.arrayObjectsPictures[arrayIndex].url + '.jpg';
+    imgElement.querySelector('.picture__comments');
+    imgElement.querySelector('.picture__likes').textContent = window.creature.arrayObjectsPictures[arrayIndex].likes;
+    imgElement.querySelector('.picture__comments').textContent = window.creature.arrayObjectsPictures[arrayIndex].comments.length;
+    return imgElement;
   };
 
+  var fragment = document.createDocumentFragment();
   // цикл вызывает функцию заполнения объекта и добавляет элементы в разметку
   for (var i = 0; i <= window.creature.NUMBER_OF_MOK_OBJECT; i++) {
-    var template = getPictureElement(i);
-    var element = template.cloneNode(true);
-    picturesContainer.appendChild(element);
+    fragment.appendChild(fillPictureElement(i));
   }
+  imgContainer.appendChild(fragment);
 })();

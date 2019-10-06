@@ -31,29 +31,29 @@
   var commentsName = ['Артем', 'Ваня', 'Илья', 'Жанна', 'Наталья', 'Людмила'];
 
   // функция создает объект со случайными данными
-  var getPicturesMocks = function (numberUrl) {
+  var getRandomMock = function (numberUrl) {
     var publicationDescription = {};
     publicationDescription.url = numberUrl + 1;
     publicationDescription.description = 'Описание фотографии';
     publicationDescription.likes = getRandomNumber(MIN_NUMBER_LIKES, MAX_NUMBER_LIKES);
-    publicationDescription.comments = getComments();
+    publicationDescription.comments = getRandomComments();
     return publicationDescription;
   };
 
-  var getComments = function () {
-    var commentArrays = [];
+  var getRandomComments = function () {
+    var arrayComments = [];
     for (var i = 0; i <= getRandomNumber(MIN_RANDOM_COMMENTS, MAX_RANDOM_COMMENTS); i++) {
-      commentArrays.push({
+      arrayComments.push({
         avatar: 'img/avatar-' + (getRandomNumber(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE) + 1) + '.svg',
         message: commentsMassages[getRandomNumber(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)],
         name: commentsName[getRandomNumber(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)]
       });
     }
-    return commentArrays;
+    return arrayComments;
   };
 
   // цикл вызывает функцию создания объекта и добавляет объект в пустой массив
   for (var i = 0; i <= window.creature.NUMBER_OF_MOK_OBJECT; i++) {
-    arrayObjectsPictures.push(getPicturesMocks(i));
+    arrayObjectsPictures.push(getRandomMock(i));
   }
 })();
