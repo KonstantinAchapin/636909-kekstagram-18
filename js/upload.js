@@ -9,11 +9,13 @@
   var INITIAL_VALUE_IMG = 100;
   var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
 
-  var imgUploadSection = document.querySelector('.img-upload');
+  var FILTER_INVERT_PROPORTION_NUMBER = 100;
+  var FILTER_BLUR_PROPORTION_NUMBER = 3;
+  var FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST = 0.5;
+  var FILTER_BRIGHTNESS_PROPORTION_NUMBER_SECOND = 2;
 
-  window.upload = {
-    imgUploadSection: imgUploadSection
-  };
+
+  var imgUploadSection = document.querySelector('.img-upload');
 
   var imgUploadForm = imgUploadSection.querySelector('#upload-select-image');
   var imgEditingForm = imgUploadSection.querySelector('.img-upload__overlay');
@@ -25,8 +27,6 @@
   var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
 
   var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
-  var imgEffectButtonHandler = imgUploadSection.querySelector('.effect-level__pin');
-  var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
 
   // определяем, а потом скрываем слайдер редактирования по умолчанию
   var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
@@ -41,16 +41,16 @@
   var numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
 
   // определяем переменную которая хранит позицию пина на линейке изменения эффекта
-  var positionEffectPin = 0;
+  var imgEffectButtonPosition = 0;
+
+  window.upload = {
+    imgUploadSection: imgUploadSection,
+    imgEffectButtonPosition: imgEffectButtonPosition
+  };
 
   // событие открытия попапа после загрузки фотографии
   imgDownloaderHandler.addEventListener('change', function () {
     openImageEditing();
-
-    // находим позицию пина на линейке изменения и делаем пропорцию в %
-    var posPinX = imgEffectButtonHandler.offsetLeft;
-    var widthParentPin = imgEffectLevelLine.offsetWidth;
-    positionEffectPin = Math.round((posPinX / widthParentPin) * 100);
 
     // добавляем событие закрытие по кнопке ESC
     document.addEventListener('keydown', buttonClickHandler);
@@ -124,6 +124,8 @@
     var selectionEffect = function () {
       currentRadioButton.checked = true;
       imgUploadPreview.style.filter = null;
+      window.slider.imgEffectButtonHandler.style.left = window.slider.imgEffectLevelLine.offsetWidth + 'px';
+      window.slider.imgEffectLevelDepth.style.width = window.slider.imgEffectLevelLine.offsetWidth + 'px';
       // Скрываем полосу фильтров на позиции - оригинал
     };
 
@@ -160,27 +162,25 @@
     currentRadioButton.addEventListener('click', selectionEffect);
     currentRadioButton.addEventListener('click', hiddenImgSliderEffect);
     currentRadioButton.addEventListener('click', applyPressingEffect);
-
-    // функция изменения эффекта фильтра при отжатии клавиши на пине
-    var applyPinEffect = function () {
-      if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
-        imgUploadPreview.style.filter = 'grayscale(' + positionEffectPin / 100 + ')';
-      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
-        imgUploadPreview.style.filter = 'sepia(' + positionEffectPin / 100 + ')';
-      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
-        imgUploadPreview.style.filter = 'invert(' + positionEffectPin / 100 + '%' + ')';
-      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
-        imgUploadPreview.style.filter = 'blur(' + Math.round((positionEffectPin / 4) / 10) + 'px' + ')';
-      } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
-        imgUploadPreview.style.filter = 'brightness(' + Math.round((positionEffectPin / 3) / 10) + ')';
-      }
-    };
-    // вызывает функцию изменения при отжатии клавиши пина
-    imgEffectButtonHandler.addEventListener('mouseup', applyPinEffect);
   };
 
   // цикл который перебирает радиобаттоны и вызывает функцию модификации изображения, добавления ей фильтров
   for (var i = 0; i < imgRadioEffectButton.length; i++) {
     modifiedImageEffect(imgRadioEffectButton[i]);
   }
+
+  // функция изменяет эффект изображения в зависимости от положения пина
+  window.setEffectLevelPin = function (buttonPosition, maxWidth) {
+    if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
+      imgUploadPreview.style.filter = 'grayscale(' + buttonPosition / maxWidth.offsetWidth + ')';
+    } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
+      imgUploadPreview.style.filter = 'sepia(' + buttonPosition / maxWidth.offsetWidth + ')';
+    } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
+      imgUploadPreview.style.filter = 'invert(' + buttonPosition / maxWidth.offsetWidth * FILTER_INVERT_PROPORTION_NUMBER + '%' + ')';
+    } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
+      imgUploadPreview.style.filter = 'blur(' + buttonPosition / maxWidth.offsetWidth * FILTER_BLUR_PROPORTION_NUMBER + 'px' + ')';
+    } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
+      imgUploadPreview.style.filter = 'brightness(' + (buttonPosition / maxWidth.offsetWidth + FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST) * FILTER_BRIGHTNESS_PROPORTION_NUMBER_SECOND + ')';
+    }
+  };
 })();
