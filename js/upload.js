@@ -9,6 +9,12 @@
   var INITIAL_VALUE_IMG = 100;
   var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
 
+  var FILTER_INVERT_PROPORTION_NUMBER = 100;
+  var FILTER_BLUR_PROPORTION_NUMBER = 3;
+  var FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST = 0.5;
+  var FILTER_BRIGHTNESS_PROPORTION_NUMBER_SECOND = 2;
+
+
   var imgUploadSection = document.querySelector('.img-upload');
 
   var imgUploadForm = imgUploadSection.querySelector('#upload-select-image');
@@ -21,16 +27,6 @@
   var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
 
   var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
-  var imgEffectButtonHandler = imgUploadSection.querySelector('.effect-level__pin');
-  var imgEffectLevelLine = imgUploadSection.querySelector('.effect-level__line');
-  var imgEffectLevelDepth = imgUploadSection.querySelector('.effect-level__depth');
-
-  window.upload = {
-    imgUploadSection: imgUploadSection,
-    imgEffectButtonHandler: imgEffectButtonHandler,
-    imgEffectLevelLine: imgEffectLevelLine,
-    imgEffectLevelDepth: imgEffectLevelDepth
-  };
 
   // определяем, а потом скрываем слайдер редактирования по умолчанию
   var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
@@ -46,7 +42,11 @@
 
   // определяем переменную которая хранит позицию пина на линейке изменения эффекта
   var imgEffectButtonPosition = 0;
-  window.imgEffectButtonPosition = imgEffectButtonPosition;
+
+  window.upload = {
+    imgUploadSection: imgUploadSection,
+    imgEffectButtonPosition: imgEffectButtonPosition
+  };
 
   // событие открытия попапа после загрузки фотографии
   imgDownloaderHandler.addEventListener('change', function () {
@@ -124,8 +124,8 @@
     var selectionEffect = function () {
       currentRadioButton.checked = true;
       imgUploadPreview.style.filter = null;
-      imgEffectButtonHandler.style.left = imgEffectLevelLine.offsetWidth + 'px';
-      imgEffectLevelDepth.style.width = imgEffectLevelLine.offsetWidth + 'px';
+      window.slider.imgEffectButtonHandler.style.left = window.slider.imgEffectLevelLine.offsetWidth + 'px';
+      window.slider.imgEffectLevelDepth.style.width = window.slider.imgEffectLevelLine.offsetWidth + 'px';
       // Скрываем полосу фильтров на позиции - оригинал
     };
 
@@ -176,17 +176,11 @@
     } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
       imgUploadPreview.style.filter = 'sepia(' + buttonPosition / maxWidth.offsetWidth + ')';
     } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--marvin') {
-      imgUploadPreview.style.filter = 'invert(' + buttonPosition / maxWidth.offsetWidth * 100 + '%' + ')';
+      imgUploadPreview.style.filter = 'invert(' + buttonPosition / maxWidth.offsetWidth * FILTER_INVERT_PROPORTION_NUMBER + '%' + ')';
     } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--phobos') {
-      imgUploadPreview.style.filter = 'blur(' + Math.floor((buttonPosition / 125)) + 'px' + ')';
+      imgUploadPreview.style.filter = 'blur(' + buttonPosition / maxWidth.offsetWidth * FILTER_BLUR_PROPORTION_NUMBER + 'px' + ')';
     } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--heat') {
-      if (buttonPosition <= maxWidth.offsetWidth / 3) {
-        imgUploadPreview.style.filter = 'brightness(1)';
-      } else if (buttonPosition <= (maxWidth.offsetWidth / 3) * 2) {
-        imgUploadPreview.style.filter = 'brightness(2)';
-      } else {
-        imgUploadPreview.style.filter = 'brightness(3)';
-      }
+      imgUploadPreview.style.filter = 'brightness(' + (buttonPosition / maxWidth.offsetWidth + FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST) * FILTER_BRIGHTNESS_PROPORTION_NUMBER_SECOND + ')';
     }
   };
 })();
