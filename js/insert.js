@@ -25,4 +25,6 @@
   };
   renderImg(fillPictureElement);
   imgContainer.appendChild(fragment);
+
+  // window.load('https://js.dump.academy/kekstagram/data', renderImg, window.ifError); // В ЭТОМ ВЫЗОВЕ ЧТО БРАТЬ ПАРАМЕТРОМ ДЛЯ ПЕРЕДАЧИ МАССИВА? Я ХОТЕЛ В renderImg ПЕРЕДАТЬ МАССИВ data И УЖЕ ПРИ ВЫЗОВЕ renderImg(fillPictureElement) ПЕРЕДАТЬ ЕГО ВМЕСТЕ С НОМЕРОМ arrayIndex В ФУНКЦИЮ fillPictureElement, ГДЕ ЗАМЕНИТЬ window.creature.arrayObjectsPictures НА ПАРАМЕТР data С МАССИВОМ. НО ЕСЛИ Я ПЫТАЮСЬ ФУНКЦИИ renderImg ПЕРЕДАТЬ МАССИВ ТО НАТЫКАЮСЬ НА ТО ЧТО У НЕЁ УЖЕ ЕСТЬ ПАРАМЕТР array И КАК ТУТ ИСПОЛЬЗОВАТЬ ЕЩЁ И ПАРАМЕТР data НЕ ПОЙМУ? С fillPictureElement ТАКАЯ ЖЕ ИСТОРИЯ? ЧУВСТВУЮ ЧТО ТУТ ВСЕ ПРОСТО, НО ПОНЯТЬ НЕ МОГУ ...
 })();
