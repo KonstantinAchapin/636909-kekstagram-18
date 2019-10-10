@@ -45,7 +45,8 @@
 
   window.upload = {
     imgUploadSection: imgUploadSection,
-    imgEffectButtonPosition: imgEffectButtonPosition
+    imgEffectButtonPosition: imgEffectButtonPosition,
+    imgEditingForm: imgEditingForm
   };
 
   // событие открытия попапа после загрузки фотографии
@@ -60,7 +61,7 @@
   var buttonClickHandler = function (evt) {
     if (evt.target !== window.upload.imgHashTag && evt.target !== window.upload.imgComment) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        closeImageEditing();
+        window.closeImageEditing();
         document.removeEventListener('keydown', buttonClickHandler);
       }
     }
@@ -73,11 +74,11 @@
 
   // событие закрытия попапа
   imgButtonCloseHandler.addEventListener('click', function () {
-    closeImageEditing();
+    window.closeImageEditing();
   });
 
   // функция закрытия попапа
-  var closeImageEditing = function () {
+  window.closeImageEditing = function () {
     imgEditingForm.classList.add('hidden');
     document.removeEventListener('keydown', buttonClickHandler);
 
