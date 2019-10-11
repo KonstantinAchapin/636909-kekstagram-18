@@ -4,21 +4,25 @@
 // Данные формы успешно отправлены
 (function () {
   window.ifSuccessForm = function () {
-    window.closeImageEditing();
-    var main = document.querySelector('main');
+    var mainContainer = document.querySelector('main');
     var successContainer = document.querySelector('#success').content;
+    var uploadImgButton = document.querySelector('#upload-file');
 
-    main.appendChild(successContainer);
+    uploadImgButton.value = '';
+    window.closeImageEditing();
+
+    mainContainer.appendChild(successContainer);
 
     var success = document.querySelector('.success');
     var successButton = document.querySelector('.success__button');
-    var closeSuccess = function (button) {
+    var closeSuccessPopup = function (button) {
       button.addEventListener('click', function () {
         success.remove();
       });
     };
-    closeSuccess(successButton);
-    closeSuccess(success);
+
+    closeSuccessPopup(successButton);
+    closeSuccessPopup(success);
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
@@ -29,10 +33,10 @@
 
   // Ошибка отправки данных формы
   window.ifErrorForm = function (message) {
-    window.closeImageEditing();
     var main = document.querySelector('main');
     var errorContainer = document.querySelector('#error').content;
     var errorMassage = errorContainer.querySelector('.error__title');
+    window.closeImageEditing();
 
     errorMassage.textContent = 'Ошибка: ' + message;
     main.appendChild(errorContainer);
@@ -46,19 +50,16 @@
       });
     };
 
-    error.addEventListener('click', function () {
-      error.remove();
-    });
+    closeError(error);
+    for (var i = 0; i < errorButton.length; i++) {
+      closeError(errorButton[i]);
+    }
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
         error.remove();
       }
     });
-
-    for (var i = 0; i < errorButton.length; i++) {
-      closeError(errorButton[i]);
-    }
   };
 
   // Ошибка загрузки фотографий
