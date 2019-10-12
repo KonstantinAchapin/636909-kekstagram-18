@@ -15,9 +15,12 @@
 
     var success = document.querySelector('.success');
     var successButton = document.querySelector('.success__button');
+
+    success.style.display = 'flex';
+
     var closeSuccessPopup = function (button) {
       button.addEventListener('click', function () {
-        success.remove();
+        success.style.display = 'none';
       });
     };
 
@@ -26,7 +29,7 @@
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        success.remove();
+        success.style.display = 'none';
       }
     });
   };
@@ -44,9 +47,11 @@
     var error = document.querySelector('.error');
     var errorButton = document.querySelectorAll('.error__button');
 
+    error.style.display = 'flex';
+
     var closeError = function (button) {
       button.addEventListener('click', function () {
-        error.remove();
+        error.style.display = 'none';
       });
     };
 
@@ -57,7 +62,7 @@
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        error.remove();
+        error.style.display = 'none';
       }
     });
   };
