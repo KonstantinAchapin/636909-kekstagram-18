@@ -1,11 +1,24 @@
-// Загружает файлы с удаленного сервера
+// Загружает и отправляет файлы с удаленного сервера и отправляет из формы
 'use strict';
 (function () {
-  var URL = 'https://js.dump.academy/kekstagram/data';
+  var UPLOAD_URL = 'https://js.dump.academy/kekstagram';
+  var LOAD_URL = 'https://js.dump.academy/kekstagram/data';
   var STATUS_OK = 200;
   var TIMEOUT = 10000;
 
   window.load = function (onSuccess, onError) {
+    var xhr = getXhr(onSuccess, onError);
+    xhr.open('GET', LOAD_URL);
+    xhr.send();
+  };
+
+  window.send = function (data, onSuccess, onError) {
+    var xhr = getXhr(onSuccess, onError);
+    xhr.open('POST', UPLOAD_URL);
+    xhr.send(data);
+  };
+
+  var getXhr = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -28,23 +41,7 @@
 
     xhr.timeout = TIMEOUT;
 
-    xhr.open('GET', URL);
-    xhr.send();
+    return xhr;
   };
 
-  window.ifErrorInsert = function (message) {
-    // Подправил попап для этого случая его возникновения, что бы интереснее было
-    var main = document.querySelector('main');
-    var errorContainer = document.querySelector('#error').content;
-    var errorMassage = errorContainer.querySelector('.error__title');
-
-    errorMassage.textContent = 'Ошибка: ' + message;
-
-    var errorButton = errorContainer.querySelectorAll('.error__button');
-    errorButton.forEach(function (item) {
-      item.style.visibility = 'hidden';
-    });
-
-    main.appendChild(errorContainer);
-  };
 })();

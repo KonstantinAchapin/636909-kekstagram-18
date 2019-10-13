@@ -69,9 +69,10 @@
     }
   });
 
-  // временная отмена отправки данных для удобства
-  imgForm.addEventListener('submit', function (event) {
-    event.preventDefault();
+  // Отправка данных для формы на сервер
+  imgForm.addEventListener('submit', function (evt) {
+    window.send(new FormData(imgForm), window.ifSuccessForm, window.ifErrorForm);
+    evt.preventDefault();
   });
 
   // валидация введенных данных по комментарию пользователя

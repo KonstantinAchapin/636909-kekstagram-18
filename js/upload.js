@@ -9,6 +9,9 @@
   var INITIAL_VALUE_IMG = 100;
   var INITIAL_NUMBER_FOR_SIZE_IMG = 1;
 
+  var NUMBER_PROPORTION_FOR_VALUE = 100;
+  var INITIAL_NUMBER_FOR_VALUE = 100;
+
   var FILTER_INVERT_PROPORTION_NUMBER = 100;
   var FILTER_BLUR_PROPORTION_NUMBER = 3;
   var FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST = 0.5;
@@ -25,6 +28,8 @@
   var scaleControlSmallHandler = imgUploadSection.querySelector('.scale__control--smaller');
   var scaleControlBigHandler = imgUploadSection.querySelector('.scale__control--bigger');
   var scaleControlValue = imgUploadSection.querySelector('.scale__control--value');
+
+  var effectLevelValue = document.querySelector('.effect-level__value');
 
   var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
 
@@ -43,9 +48,13 @@
   // определяем переменную которая хранит позицию пина на линейке изменения эффекта
   var imgEffectButtonPosition = 0;
 
+  // задаем начальное значение input value шкалы изменения эффекта
+  effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
+
   window.upload = {
     imgUploadSection: imgUploadSection,
-    imgEffectButtonPosition: imgEffectButtonPosition
+    imgEffectButtonPosition: imgEffectButtonPosition,
+    imgEditingForm: imgEditingForm
   };
 
   // событие открытия попапа после загрузки фотографии
@@ -60,7 +69,7 @@
   var buttonClickHandler = function (evt) {
     if (evt.target !== window.upload.imgHashTag && evt.target !== window.upload.imgComment) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        closeImageEditing();
+        window.closeImageEditing();
         document.removeEventListener('keydown', buttonClickHandler);
       }
     }
@@ -73,11 +82,11 @@
 
   // событие закрытия попапа
   imgButtonCloseHandler.addEventListener('click', function () {
-    closeImageEditing();
+    window.closeImageEditing();
   });
 
   // функция закрытия попапа
-  var closeImageEditing = function () {
+  window.closeImageEditing = function () {
     imgEditingForm.classList.add('hidden');
     document.removeEventListener('keydown', buttonClickHandler);
 
@@ -87,6 +96,8 @@
     // сброс размера картинки scale;
     imgUploadPreview.style.transform = 'scale(' + INITIAL_NUMBER_FOR_SIZE_IMG + ')';
     numberForSize = INITIAL_NUMBER_FOR_SIZE_IMG;
+    // сброс инпута эффекта
+    effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
     // сброс полосы регулировки эффекта на оригинал
     imgSliderEffect.style.visibility = 'hidden';
     // сброс фильтра изображения;
@@ -144,18 +155,23 @@
       } else if (currentRadioButton.id === 'effect-chrome') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
         imgUploadPreview.style.filter = 'grayscale(1)';
+        effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-sepia') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
         imgUploadPreview.style.filter = 'sepia(1)';
+        effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-marvin') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
         imgUploadPreview.style.filter = 'invert(100%)';
+        effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-phobos') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
         imgUploadPreview.style.filter = 'blur(3px)';
+        effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-heat') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
         imgUploadPreview.style.filter = 'brightness(3)';
+        effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       }
     };
     // вызывает функции изменения эффекта изображения при нажатии
@@ -171,6 +187,9 @@
 
   // функция изменяет эффект изображения в зависимости от положения пина
   window.setEffectLevelPin = function (buttonPosition, maxWidth) {
+
+    effectLevelValue.setAttribute('value', Math.ceil((buttonPosition * NUMBER_PROPORTION_FOR_VALUE) / maxWidth.offsetWidth));
+
     if (imgUploadPreview.className === 'img-upload__preview effects__preview--chrome') {
       imgUploadPreview.style.filter = 'grayscale(' + buttonPosition / maxWidth.offsetWidth + ')';
     } else if (imgUploadPreview.className === 'img-upload__preview effects__preview--sepia') {
