@@ -15,7 +15,7 @@
     return imgElement;
   };
 
-  var renderPictures = function (data) {
+  window.renderPictures = function (data) {
     // создаем фрагмент
     var fragment = document.createDocumentFragment();
     // проходим циклом по полученным данным
@@ -27,5 +27,5 @@
     imgContainer.appendChild(fragment);
   };
 
-  window.load(renderPictures, window.ifErrorInsert);
+  window.load(window.renderPictures, window.ifErrorInsert);
 })();
