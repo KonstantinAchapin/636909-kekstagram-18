@@ -1,6 +1,34 @@
 // Добавляет фильтрацию фотографий по кнопке
 'use strict';
 (function () {
+
+  var deletePhotos = window.debounce(function (currentArray) {
+    currentArray.forEach(function (currentPicture) {
+      currentPicture.parentNode.removeChild(currentPicture);
+    });
+  });
+
+  var sortPopularPictures = window.debounce(function (array) {
+    var arrayPopularPictures = array.sort(function (a, b) {
+      return b.likes - a.likes;
+    });
+    window.renderPictures(arrayPopularPictures);
+  });
+
+  var sortRandomPictures = window.debounce(function (array) {
+    var arrayRandomPictures = array.sort(function () {
+      return Math.random() - 0.5;
+    });
+    window.renderPictures(arrayRandomPictures);
+  });
+
+  var sortPicturesDiscussed = window.debounce(function (array) {
+    var arrayPicturesDiscussed = array.sort(function (a, b) {
+      return b.comments.length - a.comments.length;
+    });
+    window.renderPictures(arrayPicturesDiscussed);
+  });
+
   // фильтрация фотографий
   window.filterPictures = function (data) {
     var arrayPictures = data;
@@ -9,12 +37,6 @@
     var filterPopular = filterContainer.querySelector('#filter-popular');
     var filterRandom = filterContainer.querySelector('#filter-random');
     var filterDiscussed = filterContainer.querySelector('#filter-discussed');
-
-    var deletePhotos = function (currentArray) {
-      currentArray.forEach(function (currentPicture) {
-        currentPicture.parentNode.removeChild(currentPicture);
-      });
-    };
 
     // показываем раздел фильтрации фотографий
     filterContainer.classList.remove('img-filters--inactive');
@@ -28,29 +50,14 @@
         currentButton.classList.add('img-filters__button--active');
 
         if (currentButton === filterPopular) {
-          window.setTimeout(function () {
-            deletePhotos(downloadPicture);
-            var arrayPicturesPopular = arrayPictures.sort(function (a, b) {
-              return b.likes - a.likes;
-            });
-            window.renderPictures(arrayPicturesPopular);
-          }, 500);
+          deletePhotos(downloadPicture);
+          sortPopularPictures(arrayPictures);
         } else if (currentButton === filterRandom) {
-          window.setTimeout(function () {
-            deletePhotos(downloadPicture);
-            var arrayPicturesRandom = arrayPictures.sort(function () {
-              return Math.random() - 0.5;
-            });
-            window.renderPictures(arrayPicturesRandom);
-          }, 500);
+          deletePhotos(downloadPicture);
+          sortRandomPictures(arrayPictures);
         } else if (currentButton === filterDiscussed) {
-          window.setTimeout(function () {
-            deletePhotos(downloadPicture);
-            var arrayPicturesDiscussed = arrayPictures.sort(function (a, b) {
-              return b.comments.length - a.comments.length;
-            });
-            window.renderPictures(arrayPicturesDiscussed);
-          }, 500);
+          deletePhotos(downloadPicture);
+          sortPicturesDiscussed(arrayPictures);
         }
       });
     };
@@ -65,7 +72,5 @@
     cicle(filterButtons);
     // фильтрация фотографий
   };
-
-  window.load(window.filterPictures, window.ifErrorInsert);
 
 })();

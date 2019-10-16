@@ -16,6 +16,8 @@
   };
 
   window.renderPictures = function (data) {
+    // передает массив в функцию фильтрации изображений
+    window.filterPictures(data);
     // создаем фрагмент
     var fragment = document.createDocumentFragment();
     // проходим циклом по полученным данным
