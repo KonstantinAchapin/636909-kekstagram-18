@@ -13,6 +13,7 @@
       return b.likes - a.likes;
     });
     window.renderPictures(arrayPopularPictures);
+    window.previewPictures(arrayPopularPictures);
   });
 
   var sortRandomPictures = window.debounce(function (array) {
@@ -20,6 +21,7 @@
       return Math.random() - 0.5;
     });
     window.renderPictures(arrayRandomPictures);
+    window.previewPictures(arrayRandomPictures);
   });
 
   var sortPicturesDiscussed = window.debounce(function (array) {
@@ -27,6 +29,7 @@
       return b.comments.length - a.comments.length;
     });
     window.renderPictures(arrayPicturesDiscussed);
+    window.previewPictures(arrayPicturesDiscussed);
   });
 
   // фильтрация фотографий
@@ -37,6 +40,7 @@
     var filterPopular = filterContainer.querySelector('#filter-popular');
     var filterRandom = filterContainer.querySelector('#filter-random');
     var filterDiscussed = filterContainer.querySelector('#filter-discussed');
+    var downloadPicture = document.querySelectorAll('.picture');
 
     // показываем раздел фильтрации фотографий
     filterContainer.classList.remove('img-filters--inactive');
@@ -44,7 +48,7 @@
     // удаляет класс active у кнопки и добавляет его нажатой кнопке
     var switchButton = function (currentButton) {
       currentButton.addEventListener('click', function () {
-        var downloadPicture = document.querySelectorAll('.picture');
+        downloadPicture = document.querySelectorAll('.picture');
         var activeButton = filterContainer.querySelector('.img-filters__button--active');
         activeButton.classList.remove('img-filters__button--active');
         currentButton.classList.add('img-filters__button--active');
