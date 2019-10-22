@@ -41,7 +41,7 @@
 
         // Вызывает функции комментариев и отдает им текущий объект
         window.cicleComment(obj);
-        window.getCommentCount(obj);
+        window.getCommentCount();
 
         bigPicture.classList.remove('hidden');
         popupPictureImg.src = obj.url;

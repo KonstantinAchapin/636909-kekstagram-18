@@ -1,8 +1,4 @@
 // Определяет функциональсность комментариев в превью изображения
-
-// Раскидать все по функциям и модулям
-// Прибавлять количество показанных комментариев к начальному
-
 'use strict';
 (function () {
 
@@ -46,29 +42,22 @@
 
   // ДОРАБОТАТЬ ПРИБАВЛЕНИЕ ЗНАЧЕНИЯ ПРИ НАЖАТИИ КНОПКИ //
 
-  window.getCommentCount = function (currentComment) {
+  window.getCommentCount = function () {
     var commentCount = document.querySelector('.social__comment-count');
+
+    var commentsAll = document.querySelectorAll('.social__comment');
     var commentsHidden = document.querySelectorAll('.social__comment.visually-hidden');
-    var featuredComments = currentComment.comments.length - commentsHidden.length;
-    commentCount.firstChild.nodeValue = featuredComments + ' из ';
 
-    window.featuredComments = featuredComments;
+    var commentsVisuallyNumber = commentsAll.length - commentsHidden.length;
+    commentCount.firstChild.nodeValue = commentsVisuallyNumber + ' из ';
   };
-
-  // window.commentsLoaderButton.addEventListener('click', function () {
-  //   var commentCount = document.querySelector('.social__comment-count');
-  //   var comments = document.querySelectorAll('.social__comment');
-  //   var commentsHidden = document.querySelectorAll('.social__comment.visually-hidden');
-  //
-  //   var featuredComments = comments.length - commentsHidden.length;
-  //   commentCount.firstChild.nodeValue = featuredComments + ' из ';
-  // });
 
   // ДОРАБОТАТЬ ПРИБАВЛЕНИЕ ЗНАЧЕНИЯ ПРИ НАЖАТИИ КНОПКИ //
 
   // Добавляет 5 и менее комментариев при нажатии на кнопку загрузить ещё
   window.commentsLoaderButton.addEventListener('click', function () {
     var commentsHidden = document.querySelectorAll('.social__comment.visually-hidden');
+
     for (var i = 0; i < commentsHidden.length; i++) {
       if (i < 5) {
         commentsHidden[i].classList.remove('visually-hidden');
@@ -78,6 +67,7 @@
         window.commentsLoaderButton.style.display = 'none';
       }
     }
+    window.getCommentCount();
   });
 
 })();
