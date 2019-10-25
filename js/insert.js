@@ -16,8 +16,6 @@
   };
 
   window.renderPictures = function (data) {
-    // передает массив в функцию фильтрации изображений
-    window.filterPictures(data);
     // создаем фрагмент
     var fragment = document.createDocumentFragment();
     // проходим циклом по полученным данным
@@ -27,7 +25,8 @@
     }
     // добавляем в DOM;
     imgContainer.appendChild(fragment);
-  };
 
-  window.load(window.renderPictures, window.ifErrorInsert);
+    // определяем в переменную массив отображенных в данный момент картинок
+    window.thumbnailsImg = document.querySelectorAll('.picture');
+  };
 })();
