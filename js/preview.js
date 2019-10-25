@@ -4,6 +4,7 @@
 (function () {
 
   var ESC_KEYCODE = 27;
+  var MIN_NUMBER_COMMENTS = 5;
   window.ESC_KEYCODE = ESC_KEYCODE;
 
   var bigPicture = document.querySelector('.big-picture');
@@ -11,14 +12,14 @@
   var popupDescription = bigPicture.querySelector('.social__caption');
   var popupLikesCount = bigPicture.querySelector('.likes-count');
   var popupCommentsCount = bigPicture.querySelector('.comments-count');
-  var bigImgCloseButton = document.querySelector('#picture-cancel');
+  var bigImgCloseButtonHandler = document.querySelector('#picture-cancel');
   var commentBigPhoto = document.querySelectorAll('.social__comment');
 
   // функция закрытия попапа
   var closePopupImg = function () {
     bigPicture.classList.add('hidden');
     document.removeEventListener('keydown', closePopupImgKeydown);
-    window.commentsLoaderButton.style.display = 'block';
+    window.previewComments.commentsLoaderButtonHandler.style.display = 'block';
 
     // удаляет комментарии при закрытии окна
     commentBigPhoto = document.querySelectorAll('.social__comment');
@@ -35,13 +36,9 @@
 
   window.previewPictures = function (data) {
     // функция открывает попап и подставляет в него данные из объекта
-    var openPopupImg = function (currentThumbnail, obj) {
-      currentThumbnail.addEventListener('click', function (event) {
+    var openPopupImg = function (currentThumbnailHandler, obj) {
+      currentThumbnailHandler.addEventListener('click', function (event) {
         event.preventDefault();
-
-        // Вызывает функции комментариев и отдает им текущий объект
-        window.cicleComment(obj);
-        window.getCommentCount();
 
         bigPicture.classList.remove('hidden');
         popupPictureImg.src = obj.url;
@@ -49,26 +46,29 @@
         popupLikesCount.textContent = obj.likes;
         popupCommentsCount.textContent = obj.comments.length;
 
+        // Вызывает функции создания комментариев при открытии
+        window.cicleComment(obj);
+        // скрывает кнопку добавить еще сразу, если комментариев меньше 5
         commentBigPhoto = document.querySelectorAll('.social__comment');
-        if (commentBigPhoto.length <= 5) {
-          window.commentsLoaderButton.style.display = 'none';
+        if (commentBigPhoto.length <= MIN_NUMBER_COMMENTS) {
+          window.previewComments.commentsLoaderButtonHandler.style.display = 'none';
         }
-
+        window.getCommentCount();
         // добавляет событие закрытия ПОПАПА на кнопку ESC
         document.addEventListener('keydown', closePopupImgKeydown);
       });
     };
 
-    var cicle = function (hoop) {
+    var plunkThumbnails = function (arrayThumbnails) {
       // цикл перебирает миниатюры и отдает их в функцию
-      for (var i = 0; i < hoop.length; i++) {
-        openPopupImg(hoop[i], data[i]);
+      for (var i = 0; i < arrayThumbnails.length; i++) {
+        openPopupImg(arrayThumbnails[i], data[i]);
       }
     };
 
-    cicle(window.thumbnailsImg);
+    plunkThumbnails(window.thumbnailsImg);
 
-    bigImgCloseButton.addEventListener('click', function () {
+    bigImgCloseButtonHandler.addEventListener('click', function () {
       closePopupImg();
     });
   };

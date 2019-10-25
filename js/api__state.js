@@ -3,7 +3,7 @@
 
 // Данные формы успешно отправлены
 (function () {
-  window.ifSuccessForm = function () {
+  window.showSuccessWindow = function () {
     var mainContainer = document.querySelector('main');
     var successContainer = document.querySelector('#success').content;
     var uploadImgButton = document.querySelector('#upload-file');
@@ -35,7 +35,7 @@
   };
 
   // Ошибка отправки данных формы
-  window.ifErrorForm = function (message) {
+  window.showErrorWindow = function (message) {
     var main = document.querySelector('main');
     var errorContainer = document.querySelector('#error').content;
     var errorMassage = errorContainer.querySelector('.error__title');

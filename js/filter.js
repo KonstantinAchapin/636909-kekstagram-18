@@ -2,45 +2,53 @@
 'use strict';
 (function () {
 
-  var deletePhotos = window.debounce(function (currentArray) {
+  var filterContainer = document.querySelector('.img-filters');
+  var filterButtons = filterContainer.querySelectorAll('.img-filters__button');
+  var mappedPicture = document.querySelectorAll('.picture');
+  var filterPopularButton = filterContainer.querySelector('#filter-popular');
+  var filterRandomButton = filterContainer.querySelector('#filter-random');
+  var filterDiscussedButton = filterContainer.querySelector('#filter-discussed');
+
+  var deletePhotos = window.removeDebounce(function (currentArray) {
     currentArray.forEach(function (currentPicture) {
       currentPicture.parentNode.removeChild(currentPicture);
     });
   });
 
-  var sortPopularPictures = window.debounce(function (array) {
-    var arrayPopularPictures = array.sort(function (a, b) {
-      return b.likes - a.likes;
-    });
-    window.renderPictures(arrayPopularPictures);
-    window.previewPictures(arrayPopularPictures);
+  var giveFilterValue = function (array) {
+    window.renderPictures(array);
+    window.previewPictures(array);
+  };
+
+  var makeActiveButton = window.removeDebounce(function (currentButton) {
+    var activeButton = document.querySelector('.img-filters__button--active');
+    activeButton.classList.remove('img-filters__button--active');
+    currentButton.classList.add('img-filters__button--active');
   });
 
-  var sortRandomPictures = window.debounce(function (array) {
-    var arrayRandomPictures = array.sort(function () {
+  var sortPopularPictures = window.removeDebounce(function (array) {
+    giveFilterValue(array);
+  });
+
+  var sortRandomPictures = window.removeDebounce(function (array) {
+    var arrayRandomPictures = array.slice().sort(function () {
       return Math.random() - 0.5;
     });
-    window.renderPictures(arrayRandomPictures);
-    window.previewPictures(arrayRandomPictures);
+    arrayRandomPictures = arrayRandomPictures.slice(0, 10);
+    giveFilterValue(arrayRandomPictures);
   });
 
-  var sortPicturesDiscussed = window.debounce(function (array) {
-    var arrayPicturesDiscussed = array.sort(function (a, b) {
+  var sortPicturesDiscussed = window.removeDebounce(function (array) {
+    var arrayPicturesDiscussed = array.slice().sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
-    window.renderPictures(arrayPicturesDiscussed);
-    window.previewPictures(arrayPicturesDiscussed);
+    giveFilterValue(arrayPicturesDiscussed);
   });
 
   // фильтрация фотографий
   window.filterPictures = function (data) {
+    var arrayMyPictures = data;
     var arrayPictures = data;
-    var filterContainer = document.querySelector('.img-filters');
-    var filterButtons = filterContainer.querySelectorAll('.img-filters__button');
-    var filterPopular = filterContainer.querySelector('#filter-popular');
-    var filterRandom = filterContainer.querySelector('#filter-random');
-    var filterDiscussed = filterContainer.querySelector('#filter-discussed');
-    var downloadPicture = document.querySelectorAll('.picture');
 
     // показываем раздел фильтрации фотографий
     filterContainer.classList.remove('img-filters--inactive');
@@ -48,33 +56,32 @@
     // удаляет класс active у кнопки и добавляет его нажатой кнопке
     var switchButton = function (currentButton) {
       currentButton.addEventListener('click', function () {
-        downloadPicture = document.querySelectorAll('.picture');
-        var activeButton = filterContainer.querySelector('.img-filters__button--active');
-        activeButton.classList.remove('img-filters__button--active');
-        currentButton.classList.add('img-filters__button--active');
+        mappedPicture = document.querySelectorAll('.picture');
 
-        if (currentButton === filterPopular) {
-          deletePhotos(downloadPicture);
-          sortPopularPictures(arrayPictures);
-        } else if (currentButton === filterRandom) {
-          deletePhotos(downloadPicture);
+        if (currentButton === filterPopularButton) {
+          deletePhotos(mappedPicture);
+          makeActiveButton(currentButton);
+          sortPopularPictures(arrayMyPictures);
+        } else if (currentButton === filterRandomButton) {
+          deletePhotos(mappedPicture);
+          makeActiveButton(currentButton);
           sortRandomPictures(arrayPictures);
-        } else if (currentButton === filterDiscussed) {
-          deletePhotos(downloadPicture);
+        } else if (currentButton === filterDiscussedButton) {
+          deletePhotos(mappedPicture);
+          makeActiveButton(currentButton);
           sortPicturesDiscussed(arrayPictures);
         }
       });
     };
 
     // цикл перебирает все кнопки и отдает их в функцию
-    var cicle = function (button) {
+    var plunkButton = function (button) {
       for (var f = 0; f < button.length; f++) {
         switchButton(button[f]);
       }
     };
 
-    cicle(filterButtons);
-    // фильтрация фотографий
+    plunkButton(filterButtons);
   };
 
 })();

@@ -33,6 +33,7 @@
 
   var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
 
+
   // определяем, а потом скрываем слайдер редактирования по умолчанию
   var imgSliderEffect = imgUploadSection.querySelector('.img-upload__effect-level');
   imgSliderEffect.style.visibility = 'hidden';
@@ -67,7 +68,7 @@
 
   // функция закрытия по кнопке ESC
   var buttonClickHandler = function (evt) {
-    if (evt.target !== window.upload.imgHashTag && evt.target !== window.upload.imgComment) {
+    if (evt.target !== window.form.imgHashTag && evt.target !== window.form.imgComment) {
       if (evt.keyCode === window.ESC_KEYCODE) {
         window.closeImageEditing();
         document.removeEventListener('keydown', buttonClickHandler);
@@ -103,8 +104,10 @@
     // сброс фильтра изображения;
     imgUploadPreview.className = 'img-upload__preview';
     imgUploadPreview.style.filter = null;
-    // сброс заполненной формы;
+    // сброс заполненной формы и валидации полей;
     imgUploadForm.reset();
+    window.form.imgComment.style.border = window.FORM_BORDER_HEIGHT + ' solid ' + window.SUCCESS_FORM_BORDER_COLOR;
+    window.form.imgHashTag.style.border = window.FORM_BORDER_HEIGHT + ' solid ' + window.SUCCESS_FORM_BORDER_COLOR;
   };
 
   // событие клика которое уменьшает размер изображения и меняет value %
@@ -137,9 +140,9 @@
       imgUploadPreview.style.filter = null;
       window.slider.imgEffectButtonHandler.style.left = window.slider.imgEffectLevelLine.offsetWidth + 'px';
       window.slider.imgEffectLevelDepth.style.width = window.slider.imgEffectLevelLine.offsetWidth + 'px';
-      // Скрываем полосу фильтров на позиции - оригинал
     };
 
+    // Скрываем полосу фильтров на позиции - оригинал
     var hiddenImgSliderEffect = function () {
       if (currentRadioButton.id === 'effect-none') {
         imgSliderEffect.style.visibility = 'hidden';
