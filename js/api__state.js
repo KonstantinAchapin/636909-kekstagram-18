@@ -35,7 +35,7 @@
   };
 
   // Ошибка отправки данных формы
-  window.showErrorWindow = function (message) {
+  window.showFillErrorWindow = function (message) {
     var main = document.querySelector('main');
     var errorContainer = document.querySelector('#error').content;
     var errorMassage = errorContainer.querySelector('.error__title');
@@ -45,7 +45,7 @@
     main.appendChild(errorContainer);
 
     var error = document.querySelector('.error');
-    var errorButton = document.querySelectorAll('.error__button');
+    var errorButtons = document.querySelectorAll('.error__button');
 
     error.style.display = 'flex';
 
@@ -56,8 +56,8 @@
     };
 
     closeError(error);
-    for (var i = 0; i < errorButton.length; i++) {
-      closeError(errorButton[i]);
+    for (var i = 0; i < errorButtons.length; i++) {
+      closeError(errorButtons[i]);
     }
 
     document.addEventListener('keydown', function (evt) {
@@ -68,15 +68,15 @@
   };
 
   // Ошибка загрузки фотографий
-  window.ifErrorInsert = function (message) {
+  window.showLoadingErrorWindow = function (message) {
     var main = document.querySelector('main');
     var errorContainer = document.querySelector('#error').content;
     var errorMassage = errorContainer.querySelector('.error__title');
 
     errorMassage.textContent = 'Ошибка: ' + message;
 
-    var errorButton = errorContainer.querySelectorAll('.error__button');
-    errorButton.forEach(function (item) {
+    var errorButtons = errorContainer.querySelectorAll('.error__button');
+    errorButtons.forEach(function (item) {
       item.style.visibility = 'hidden';
     });
     main.appendChild(errorContainer);

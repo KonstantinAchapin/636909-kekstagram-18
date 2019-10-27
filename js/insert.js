@@ -27,6 +27,6 @@
     imgContainer.appendChild(fragment);
 
     // определяем в переменную массив отображенных в данный момент картинок
-    window.thumbnailsImg = document.querySelectorAll('.picture');
+    window.thumbnailImages = document.querySelectorAll('.picture');
   };
 })();

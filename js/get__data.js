@@ -9,5 +9,5 @@
     window.previewPictures(arrayPhotoObjects);
   };
 
-  window.load(window.getPictures, window.ifErrorInsert);
+  window.load(window.getPictures, window.showLoadingErrorWindow);
 })();

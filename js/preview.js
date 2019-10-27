@@ -13,7 +13,7 @@
   var popupLikesCount = bigPicture.querySelector('.likes-count');
   var popupCommentsCount = bigPicture.querySelector('.comments-count');
   var bigImgCloseButtonHandler = document.querySelector('#picture-cancel');
-  var commentBigPhoto = document.querySelectorAll('.social__comment');
+  var bigPhotoComments = document.querySelectorAll('.social__comment');
 
   // функция закрытия попапа
   var closePopupImg = function () {
@@ -22,8 +22,8 @@
     window.previewComments.commentsLoaderButtonHandler.style.display = 'block';
 
     // удаляет комментарии при закрытии окна
-    commentBigPhoto = document.querySelectorAll('.social__comment');
-    window.deleteComments(commentBigPhoto);
+    bigPhotoComments = document.querySelectorAll('.social__comment');
+    window.deleteComments(bigPhotoComments);
   };
 
   // функция закрытия попапа на кнопку
@@ -49,8 +49,8 @@
         // Вызывает функции создания комментариев при открытии
         window.cicleComment(obj);
         // скрывает кнопку добавить еще сразу, если комментариев меньше 5
-        commentBigPhoto = document.querySelectorAll('.social__comment');
-        if (commentBigPhoto.length <= MIN_NUMBER_COMMENTS) {
+        bigPhotoComments = document.querySelectorAll('.social__comment');
+        if (bigPhotoComments.length <= MIN_NUMBER_COMMENTS) {
           window.previewComments.commentsLoaderButtonHandler.style.display = 'none';
         }
         window.getCommentCount();
@@ -66,7 +66,7 @@
       }
     };
 
-    plunkThumbnails(window.thumbnailsImg);
+    plunkThumbnails(window.thumbnailImages);
 
     bigImgCloseButtonHandler.addEventListener('click', function () {
       closePopupImg();

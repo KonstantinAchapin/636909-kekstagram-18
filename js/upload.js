@@ -31,7 +31,7 @@
 
   var effectLevelValue = document.querySelector('.effect-level__value');
 
-  var imgRadioEffectButton = imgUploadSection.querySelectorAll('.effects__radio');
+  var imgRadioEffectButtons = imgUploadSection.querySelectorAll('.effects__radio');
 
 
   // определяем, а потом скрываем слайдер редактирования по умолчанию
@@ -184,8 +184,8 @@
   };
 
   // цикл который перебирает радиобаттоны и вызывает функцию модификации изображения, добавления ей фильтров
-  for (var i = 0; i < imgRadioEffectButton.length; i++) {
-    modifiedImageEffect(imgRadioEffectButton[i]);
+  for (var i = 0; i < imgRadioEffectButtons.length; i++) {
+    modifiedImageEffect(imgRadioEffectButtons[i]);
   }
 
   // функция изменяет эффект изображения в зависимости от положения пина
