@@ -18,7 +18,7 @@
   };
 
   // функция удаляет комментарии
-  window.deleteComments = window.removeDebounce(function (currentArray) {
+  window.deleteComments = window.debounce(function (currentArray) {
     currentArray.forEach(function (currentPicture) {
       currentPicture.parentNode.removeChild(currentPicture);
     });
@@ -52,7 +52,7 @@
   };
 
   // Добавляет 5 и менее комментариев при нажатии на кнопку загрузить ещё
-  var addComments = window.removeDebounce(function () {
+  var addComments = window.debounce(function () {
     var commentsHidden = document.querySelectorAll('.social__comment.visually-hidden');
 
     for (var i = 0; i < commentsHidden.length; i++) {
@@ -64,6 +64,11 @@
       if (commentsHidden.length <= SHOW_NUMBER_COMMENTS) {
         window.previewComments.commentsLoaderButtonHandler.style.display = 'none';
       }
+
+      // останавливает цикл если все комментарии показаны
+      if (i === SHOW_NUMBER_COMMENTS) {
+        break;
+      }
     }
   });
 
@@ -73,7 +78,7 @@
   });
 
   // показывает количество видимых комментариев в счетчике
-  window.getCommentCount = window.removeDebounce(function () {
+  window.getCommentCount = window.debounce(function () {
     var commentsAll = document.querySelectorAll('.social__comment').length;
     var commentsHidden = document.querySelectorAll('.social__comment.visually-hidden').length;
 

@@ -4,7 +4,7 @@
 (function () {
   var DEBOUNCE_INTERVAL = 500; // миллисекунд
 
-  window.removeDebounce = function (cb) {
+  window.debounce = function (cb) {
     var lastTimeout = null;
 
     return function () {

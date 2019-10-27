@@ -27,18 +27,19 @@
 
   // валидация введенных данных по хэш-тэгу
   // создаем массив хэш-тэгов
-  var createHashTagsArray = function (stringToSplit) {
-    var arrayOfStrings = stringToSplit.split(' ');
-    return arrayOfStrings;
+  var createArrayHashTags = function (stringToSplit) {
+    var hashTagsStrings = stringToSplit.split(' ');
+    return hashTagsStrings;
   };
 
   // проверяем совпадение значений в массиве если совпадают то false
-  var findSameArray = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var j = i + 1; j < arr.length; j++) {
-        if (arr[i] === arr[j]) {
-          return false;
-        }
+  var isRepeatValid = function (arrayHashTags) {
+    var uniqueValues = [];
+    for (var i = 0; i < arrayHashTags.length; i++) {
+      if (uniqueValues.indexOf(arrayHashTags[i]) === -1) {
+        uniqueValues.push(arrayHashTags[i]);
+      } else {
+        return false;
       }
     }
     return true;
@@ -46,7 +47,7 @@
 
   // функция показывает ограничения по вводу и выводит подсказки по их заполнению
   imgHashTagHandler.addEventListener('input', function () {
-    var validityHashTag = function (hashTagText) {
+    var getValidityHashTag = function (hashTagText) {
       if (hashTagText.substr(BEGINNING_LINE_STRING, FIRST_CHARACTER_STRING) !== '#' & hashTagText.length >= MIN_VALUE_COMPARISON) {
         imgHashTagHandler.setCustomValidity('Введите "#" первым символом хэш-тэга');
         return false;
@@ -56,10 +57,10 @@
       } else if (hashTagText.length >= MAX_HASHTAG_SIZE) {
         imgHashTagHandler.setCustomValidity('Хэш-тэг должен быть не более 20 символов');
         return false;
-      } else if (hashTagsArray.length > MAX_HASHTAGS_AMOUNT) {
+      } else if (arrayHashTags.length > MAX_HASHTAGS_AMOUNT) {
         imgHashTagHandler.setCustomValidity('Введите не больше 5 хэш-тэгов');
         return false;
-      } else if (findSameArray(hashTagsArray) === false) {
+      } else if (isRepeatValid(arrayHashTags) === false) {
         imgHashTagHandler.setCustomValidity('Нельзя вводить одинаковые хэш-тэги');
         return false;
       } else {
@@ -68,15 +69,15 @@
       }
     };
 
-    var hashTagsArray = createHashTagsArray(imgHashTagHandler.value.toLowerCase()
+    var arrayHashTags = createArrayHashTags(imgHashTagHandler.value.toLowerCase()
     );
-    for (var i = 0; i < hashTagsArray.length; i++) {
-      if (validityHashTag(hashTagsArray[i]) === false) {
+    for (var i = 0; i < arrayHashTags.length; i++) {
+      if (getValidityHashTag(arrayHashTags[i]) === false) {
         imgHashTagHandler.style.border = window.form.FORM_BORDER_HEIGHT + ' solid ' + window.form.ERROR_FORM_BORDER_COLOR;
         break;
       } else {
         imgHashTagHandler.style.border = window.form.FORM_BORDER_HEIGHT + ' solid ' + window.form.SUCCESS_FORM_BORDER_COLOR;
-        validityHashTag(hashTagsArray[i]);
+        getValidityHashTag(arrayHashTags[i]);
       }
     }
   });
@@ -94,7 +95,7 @@
 
   // Отправка данных для формы на сервер
   imgForm.addEventListener('submit', function (evt) {
-    window.send(new FormData(imgForm), window.showSuccessWindow, window.showErrorWindow);
+    window.send(new FormData(imgForm), window.showSuccessWindow, window.showFillErrorWindow);
     evt.preventDefault();
   });
 })();

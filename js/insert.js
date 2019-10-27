@@ -9,7 +9,6 @@
   var getPictureElement = function (item) {
     var imgElement = imgItem.cloneNode(true);
     imgElement.querySelector('.picture__img').src = item.url;
-    imgElement.querySelector('.picture__comments');
     imgElement.querySelector('.picture__likes').textContent = item.likes;
     imgElement.querySelector('.picture__comments').textContent = item.comments.length;
     return imgElement;
@@ -27,6 +26,6 @@
     imgContainer.appendChild(fragment);
 
     // определяем в переменную массив отображенных в данный момент картинок
-    window.thumbnailsImg = document.querySelectorAll('.picture');
+    window.thumbnailImages = document.querySelectorAll('.picture');
   };
 })();
