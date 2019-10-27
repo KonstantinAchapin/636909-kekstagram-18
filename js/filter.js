@@ -9,7 +9,7 @@
   var filterRandomButton = filterContainer.querySelector('#filter-random');
   var filterDiscussedButton = filterContainer.querySelector('#filter-discussed');
 
-  var deletePhotos = window.removeDebounce(function (currentArray) {
+  var deletePhotos = window.debounce(function (currentArray) {
     currentArray.forEach(function (currentPicture) {
       currentPicture.parentNode.removeChild(currentPicture);
     });
@@ -20,17 +20,17 @@
     window.previewPictures(arraySortObjects);
   };
 
-  var makeActiveButton = window.removeDebounce(function (currentButton) {
+  var makeActiveButton = window.debounce(function (currentButton) {
     var activeButton = document.querySelector('.img-filters__button--active');
     activeButton.classList.remove('img-filters__button--active');
     currentButton.classList.add('img-filters__button--active');
   });
 
-  var sortPopularPictures = window.removeDebounce(function (arrayObjects) {
+  var sortPopularPictures = window.debounce(function (arrayObjects) {
     giveFilterValue(arrayObjects);
   });
 
-  var sortRandomPictures = window.removeDebounce(function (arrayObjects) {
+  var sortRandomPictures = window.debounce(function (arrayObjects) {
     var arrayRandomPictures = arrayObjects.slice().sort(function () {
       return Math.random() - 0.5;
     });
@@ -38,7 +38,7 @@
     giveFilterValue(arrayRandomPictures);
   });
 
-  var sortPicturesDiscussed = window.removeDebounce(function (arrayObjects) {
+  var sortPicturesDiscussed = window.debounce(function (arrayObjects) {
     var arrayDiscussedPictures = arrayObjects.slice().sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });

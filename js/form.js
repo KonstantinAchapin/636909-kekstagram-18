@@ -47,7 +47,7 @@
 
   // функция показывает ограничения по вводу и выводит подсказки по их заполнению
   imgHashTagHandler.addEventListener('input', function () {
-    var validityHashTag = function (hashTagText) {
+    var getValidityHashTag = function (hashTagText) {
       if (hashTagText.substr(BEGINNING_LINE_STRING, FIRST_CHARACTER_STRING) !== '#' & hashTagText.length >= MIN_VALUE_COMPARISON) {
         imgHashTagHandler.setCustomValidity('Введите "#" первым символом хэш-тэга');
         return false;
@@ -72,12 +72,12 @@
     var arrayHashTags = createArrayHashTags(imgHashTagHandler.value.toLowerCase()
     );
     for (var i = 0; i < arrayHashTags.length; i++) {
-      if (validityHashTag(arrayHashTags[i]) === false) {
+      if (getValidityHashTag(arrayHashTags[i]) === false) {
         imgHashTagHandler.style.border = window.form.FORM_BORDER_HEIGHT + ' solid ' + window.form.ERROR_FORM_BORDER_COLOR;
         break;
       } else {
         imgHashTagHandler.style.border = window.form.FORM_BORDER_HEIGHT + ' solid ' + window.form.SUCCESS_FORM_BORDER_COLOR;
-        validityHashTag(arrayHashTags[i]);
+        getValidityHashTag(arrayHashTags[i]);
       }
     }
   });
