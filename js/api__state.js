@@ -5,66 +5,80 @@
 (function () {
   window.showSuccessWindow = function () {
     var mainContainer = document.querySelector('main');
-    var successContainer = document.querySelector('#success').content;
+    var successFragment = document.querySelector('#success').content;
     var uploadImgButton = document.querySelector('#upload-file');
 
     uploadImgButton.value = '';
     window.closeImageEditing();
 
-    mainContainer.appendChild(successContainer);
+    mainContainer.appendChild(successFragment);
 
-    var success = document.querySelector('.success');
+    var successContainer = document.querySelector('.success');
     var successButton = document.querySelector('.success__button');
 
-    success.style.display = 'flex';
+    var closePopupSuccess = function () {
+      successContainer.style.display = 'none';
+      document.removeEventListener('keydown', closePopupSuccessKeydown);
+    };
 
-    var closeSuccessPopup = function (button) {
+    var closePopupSuccessKeydown = function (evt) {
+      if (evt.keyCode === window.ESC_KEYCODE) {
+        closePopupSuccess();
+      }
+    };
+
+    document.addEventListener('keydown', closePopupSuccessKeydown);
+
+    successContainer.style.display = 'flex';
+
+    var addCloseSuccessPopupHandler = function (button) {
       button.addEventListener('click', function () {
-        success.style.display = 'none';
+        closePopupSuccess();
       });
     };
 
-    closeSuccessPopup(successButton);
-    closeSuccessPopup(success);
-
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
-        success.style.display = 'none';
-      }
-    });
+    addCloseSuccessPopupHandler(successButton);
+    addCloseSuccessPopupHandler(successContainer);
   };
 
   // Ошибка отправки данных формы
   window.showFillErrorWindow = function (message) {
     var main = document.querySelector('main');
-    var errorContainer = document.querySelector('#error').content;
-    var errorMassage = errorContainer.querySelector('.error__title');
+    var errorFragment = document.querySelector('#error').content;
+    var errorMassage = errorFragment.querySelector('.error__title');
     window.closeImageEditing();
 
     errorMassage.textContent = 'Ошибка: ' + message;
-    main.appendChild(errorContainer);
+    main.appendChild(errorFragment);
 
-    var error = document.querySelector('.error');
+    var errorContainer = document.querySelector('.error');
     var errorButtons = document.querySelectorAll('.error__button');
 
-    error.style.display = 'flex';
+    errorContainer.style.display = 'flex';
 
-    var closeError = function (button) {
+    var closePopupError = function () {
+      errorContainer.style.display = 'none';
+      document.removeEventListener('keydown', closePopupErrorKeydown);
+    };
+
+    var addCloseErrorPopupHandler = function (button) {
       button.addEventListener('click', function () {
-        error.style.display = 'none';
+        closePopupError();
       });
     };
 
-    closeError(error);
-    for (var i = 0; i < errorButtons.length; i++) {
-      closeError(errorButtons[i]);
-    }
-
-    document.addEventListener('keydown', function (evt) {
+    var closePopupErrorKeydown = function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        error.style.display = 'none';
+        closePopupError();
       }
-    });
+    };
+
+    document.addEventListener('keydown', closePopupErrorKeydown);
+
+    addCloseErrorPopupHandler(errorContainer);
+    for (var i = 0; i < errorButtons.length; i++) {
+      addCloseErrorPopupHandler(errorButtons[i]);
+    }
   };
 
   // Ошибка загрузки фотографий
