@@ -139,7 +139,7 @@
   });
 
   // функция которая передает в событие нажатую кнопку, а дальше событие с помощью условий меняет классы изображения, добавляя соответствующие фильтры
-  var changesImageEffect = function (currentRadioButton) {
+  var changeImageEffect = function (currentRadioButton) {
     // выбирает эффект изображения
     var selectionEffect = function () {
       currentRadioButton.checked = true;
@@ -191,7 +191,7 @@
 
   // цикл который перебирает радиобаттоны и вызывает функцию модификации изображения, добавления ей фильтров
   for (var i = 0; i < imgRadioEffectButtons.length; i++) {
-    changesImageEffect(imgRadioEffectButtons[i]);
+    changeImageEffect(imgRadioEffectButtons[i]);
   }
 
   // функция изменяет эффект изображения в зависимости от положения пина
