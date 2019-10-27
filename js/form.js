@@ -33,10 +33,10 @@
   };
 
   // проверяем совпадение значений в массиве если совпадают то false
-  var findSameArray = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var j = i + 1; j < arr.length; j++) {
-        if (arr[i] === arr[j]) {
+  var findSameArray = function (arrayHashtags) {
+    for (var i = 0; i < arrayHashtags.length; i++) {
+      for (var j = i + 1; j < arrayHashtags.length; j++) {
+        if (arrayHashtags[i] === arrayHashtags[j]) {
           return false;
         }
       }

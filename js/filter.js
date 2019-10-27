@@ -75,13 +75,13 @@
     };
 
     // цикл перебирает все кнопки и отдает их в функцию
-    var plunkButton = function (button) {
-      for (var f = 0; f < button.length; f++) {
-        switchButton(button[f]);
+    var iteratesButton = function (button) {
+      for (var i = 0; i < button.length; i++) {
+        switchButton(button[i]);
       }
     };
 
-    plunkButton(filterButtons);
+    iteratesButton(filterButtons);
   };
 
 })();
