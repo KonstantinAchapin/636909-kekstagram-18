@@ -33,12 +33,13 @@
   };
 
   // проверяем совпадение значений в массиве если совпадают то false
-  var findSameArray = function (arrayHashtags) {
-    for (var i = 0; i < arrayHashtags.length; i++) {
-      for (var j = i + 1; j < arrayHashtags.length; j++) {
-        if (arrayHashtags[i] === arrayHashtags[j]) {
-          return false;
-        }
+  var isRepeatValid = function (arrayHashTags) {
+    var uniqueValues = [];
+    for (var i = 0; i < arrayHashTags.length; i++) {
+      if (uniqueValues.indexOf(arrayHashTags[i]) === -1) {
+        uniqueValues.push(arrayHashTags[i]);
+      } else {
+        return false;
       }
     }
     return true;
@@ -59,7 +60,7 @@
       } else if (arrayHashTags.length > MAX_HASHTAGS_AMOUNT) {
         imgHashTagHandler.setCustomValidity('Введите не больше 5 хэш-тэгов');
         return false;
-      } else if (findSameArray(arrayHashTags) === false) {
+      } else if (isRepeatValid(arrayHashTags) === false) {
         imgHashTagHandler.setCustomValidity('Нельзя вводить одинаковые хэш-тэги');
         return false;
       } else {
