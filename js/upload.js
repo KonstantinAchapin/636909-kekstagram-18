@@ -17,6 +17,12 @@
   var FILTER_BRIGHTNESS_PROPORTION_NUMBER_FIRST = 0.5;
   var FILTER_BRIGHTNESS_PROPORTION_NUMBER_SECOND = 2;
 
+  var GRAYSCALE_STANDARD_VALUE = '1';
+  var SEPIA_STANDARD_VALUE = '1';
+  var INVERT_STANDARD_VALUE = '100%';
+  var BLUR_STANDARD_VALUE = '3px';
+  var BRIGHTNESS_STANDARD_VALUE = '3';
+
 
   var imgUploadSection = document.querySelector('.img-upload');
 
@@ -157,23 +163,23 @@
         imgUploadPreview.className = 'img-upload__preview';
       } else if (currentRadioButton.id === 'effect-chrome') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--chrome';
-        imgUploadPreview.style.filter = 'grayscale(1)';
+        imgUploadPreview.style.filter = 'grayscale(' + GRAYSCALE_STANDARD_VALUE + ')';
         effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-sepia') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--sepia';
-        imgUploadPreview.style.filter = 'sepia(1)';
+        imgUploadPreview.style.filter = 'sepia(' + SEPIA_STANDARD_VALUE + ')';
         effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-marvin') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--marvin';
-        imgUploadPreview.style.filter = 'invert(100%)';
+        imgUploadPreview.style.filter = 'invert(' + INVERT_STANDARD_VALUE + ')';
         effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-phobos') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--phobos';
-        imgUploadPreview.style.filter = 'blur(3px)';
+        imgUploadPreview.style.filter = 'blur(' + BLUR_STANDARD_VALUE + ')';
         effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       } else if (currentRadioButton.id === 'effect-heat') {
         imgUploadPreview.className = 'img-upload__preview effects__preview--heat';
-        imgUploadPreview.style.filter = 'brightness(3)';
+        imgUploadPreview.style.filter = 'brightness(' + BRIGHTNESS_STANDARD_VALUE + ')';
         effectLevelValue.setAttribute('value', INITIAL_NUMBER_FOR_VALUE);
       }
     };
