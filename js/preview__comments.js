@@ -64,6 +64,11 @@
       if (commentsHidden.length <= SHOW_NUMBER_COMMENTS) {
         window.previewComments.commentsLoaderButtonHandler.style.display = 'none';
       }
+
+      // останавливает цикл если все комментарии показаны
+      if (i === SHOW_NUMBER_COMMENTS) {
+        break;
+      }
     }
   });
 
